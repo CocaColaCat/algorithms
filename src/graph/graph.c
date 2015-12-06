@@ -58,16 +58,3 @@ void printGraph(Graph *graph){
 		printf("\n");
 	}
 };
-
-// int main(){
-// 	int V = 4;
-// 	Graph* graph = createGraph(V);
-// 	addEdge(graph, 0, 1);
-// 	addEdge(graph, 0, 3);
-// 	addEdge(graph, 0, 2);
-// 	addEdge(graph, 1, 3);
-// 	addEdge(graph, 1, 2);
-// 	addEdge(graph, 3, 2);
-// 	printGraph(graph);
-// 	return 1;
-// }
