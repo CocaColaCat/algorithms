@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "graph.c"
-#include "stack.c"
+#include "../data_structure/stack.c"
 
 void doDft(Graph* graph, Stack* stack, bool* checked){
 	if(IsEmpty(stack)){

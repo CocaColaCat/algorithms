@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "graph.c"
-#include "queue.c"
+#include "../data_structure/queue.c"
 
 void doBft(Graph* graph, Queue* queue, bool* checked){
 	if(IsEmpty(queue)){
