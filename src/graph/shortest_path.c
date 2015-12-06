@@ -1,18 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "graph.c"
-#include "../data_structure/stack.c"
+#include "../data_structure/stack_queue.c"
 
-// #Single-source paths: 
-// Given a graph and a source vertex s, support queries of the form Is there a path 
-// from s to a given target vertex v? If so, find such a path.
-void doDft(Graph* graph, Stack* stack, bool* marked, int* edgeTo){
-	if(IsEmpty(stack)){
+// #Single-source shortest paths: 
+// Given a graph and a source vertex s, support que- ries of the form Is there a 
+// path from s to a given target vertex v? If so, find a shortest such path 
+// (one with a minimal number of edges).
+void doBft(Graph* graph, Queue* queue, bool* marked, int* edgeTo){
+	if(IsQueueEmpty(queue)){
 		puts("\n--- traverse is done. ---");
 	}else{
-		// deal with current node: pop stack, find list's head, 
-		int top = StackTop(stack);
-		StackPop(stack);
+		// deal with current node: pop queue, find list's head, 
+		int top = QueueTop(queue);
+		QueuePop(queue);
 		AdjListNode* node = graph->array[top].head;
 
 		if(!marked[top])
@@ -22,21 +23,19 @@ void doDft(Graph* graph, Stack* stack, bool* marked, int* edgeTo){
 		while(node){
 			if(!marked[node->dest]){
 				edgeTo[node->dest] = top;
-				StackPush(stack, node->dest);
+				QueuePush(queue, node->dest);
 			}
 			node = node->next;
 		}
-		doDft(graph, stack, marked, edgeTo);
+		doBft(graph, queue, marked, edgeTo	);
 	}
 };
 
-void dft(Graph *graph, int pivot, bool* marked, int* edgeTo){
-	Stack* stack = StackCreate();
-
-	// put pivot node into stack;
-	StackPush(stack, pivot);
+void bft(Graph* graph, int pivot, bool* marked, int* edgeTo){
+	Queue* queue = CreateQueue();
+	QueuePush(queue,pivot);
 	printf("--- traverse start from %i ---\n", pivot);
-	doDft(graph, stack, marked, edgeTo);
+	doBft(graph, queue, marked, edgeTo);
 };
 
 void paths(Graph* graph, int src, bool* marked, int* edgeTo){
@@ -51,7 +50,7 @@ void paths(Graph* graph, int src, bool* marked, int* edgeTo){
 				currentNode = edgeTo[currentNode];
 			}
 			StackPush(s, src);
-			while(!IsEmpty(s)){
+			while(!IsStackEmpty(s)){
 				printf(" %i ", StackTop(s));
 				StackPop(s);
 			}
@@ -75,7 +74,7 @@ void pathTo(Graph* graph, int src, int dest, bool* marked, int* edgeTo){
 			dest = edgeTo[dest];
 		}
 		StackPush(s, src);
-		while(!IsEmpty(s)){
+		while(!IsStackEmpty(s)){
 			printf("-> %i ", StackTop(s));
 			StackPop(s);
 		}
@@ -94,7 +93,7 @@ Graph* fetchGraph(){
 	addEdge(graph, 5, 7);
 	addEdge(graph, 5, 0);
 	addEdge(graph, 1, 6);
-	return graph;
+	return graph;  
 };
 
 int main(){
@@ -106,10 +105,13 @@ int main(){
 		marked[i] = false;
 	}
 	int* edgeTo = malloc(graph->V*sizeof(int));
-	dft(graph, src, marked, edgeTo);
-	bool r = hasPathTo(graph, src, dest, marked, edgeTo);
-	printf("%i\n", r);
-	pathTo(graph, src, dest, marked, edgeTo);
+	bft(graph, src, marked, edgeTo);
+	// for(int i=1; i<graph->V;i++){
+	// 	printf("edge from %i to %i\n", i, edgeTo[i]);
+	// }
+	// bool r = hasPathTo(graph, src, dest, marked, edgeTo);
+	// printf("%i\n", r);
+	// pathTo(graph, src, dest, marked, edgeTo);
 	paths(graph, src, marked, edgeTo);
 	return 1;
 }

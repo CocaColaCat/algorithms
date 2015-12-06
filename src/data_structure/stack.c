@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-
 #define STACK_MAX 100
 typedef enum { false, true } bool;
 
