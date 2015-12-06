@@ -3,10 +3,6 @@
 #include "graph.c"
 #include "../data_structure/stack.c"
 
-// given graph, src and target, check if path exists from src to target
-// find all paths from srcs to other vertexs
-// return path from src to vertex
-
 // #Single-source paths: 
 // Given a graph and a source vertex s, support queries of the form Is there a path 
 // from s to a given target vertex v? If so, find such a path.
@@ -43,13 +39,7 @@ void dft(Graph *graph, int pivot, bool* marked, int* edgeTo){
 	doDft(graph, stack, marked, edgeTo);
 };
 
-void paths(Graph* graph, int src){
-	bool* marked = malloc(graph->V*sizeof(bool));
-	for(int i=0;i<graph->V;i++){
-		marked[i] = false;
-	}
-	int* edgeTo = malloc(graph->V*sizeof(int));
-	dft(graph, src, marked, edgeTo);
+void paths(Graph* graph, int src, bool* marked, int* edgeTo){
 	for(int i=0; i<graph->V;i++){
 		if(i==src){
 		}else if(marked[i]){
@@ -72,23 +62,11 @@ void paths(Graph* graph, int src){
 	}
 };
 
-bool hasPathTo(Graph* graph, int src, int dest){
-	bool* marked = malloc(graph->V*sizeof(bool));
-	for(int i=0;i<graph->V;i++){
-		marked[i] = false;
-	}
-	int* edgeTo = malloc(graph->V*sizeof(int));
-	dft(graph, src, marked, edgeTo);
+bool hasPathTo(Graph* graph, int src, int dest, bool* marked, int* edgeTo){
 	return marked[dest];
 };
 
-void pathTo(Graph* graph, int src, int dest){
-	bool* marked = malloc(graph->V*sizeof(bool));
-	for(int i=0;i<graph->V;i++){
-		marked[i] = false;
-	}
-	int* edgeTo = malloc(graph->V*sizeof(int));
-	dft(graph, src, marked, edgeTo);
+void pathTo(Graph* graph, int src, int dest, bool* marked, int* edgeTo){
 	if(marked[dest]){
 		printf("--- path from %i to %i ---\n", src, dest);
 		Stack* s = StackCreate();
@@ -122,9 +100,15 @@ int main(){
 	int src = 0;
 	int dest = 6;
 	Graph* graph = fetchGraph();
-	// bool r = hasPathTo(graph, src, dest);
-	// printf("%i\n", r);
-	// pathTo(graph, src, dest);
-	paths(graph, src);
+	bool* marked = malloc(graph->V*sizeof(bool));
+	for(int i=0;i<graph->V;i++){
+		marked[i] = false;
+	}
+	int* edgeTo = malloc(graph->V*sizeof(int));
+	dft(graph, src, marked, edgeTo);
+	bool r = hasPathTo(graph, src, dest, marked, edgeTo);
+	printf("%i\n", r);
+	pathTo(graph, src, dest, marked, edgeTo);
+	paths(graph, src, marked, edgeTo);
 	return 1;
 }
