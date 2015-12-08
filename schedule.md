@@ -9,7 +9,10 @@ algorithms to go:
 - Single-source directed paths
 - Single-source shortest directed paths
 
+2015/12/08
 - Directed cycle detection
+ 
+- Depth-first orders and topologicalsort
 - Kosaraju’salgorithm
 - Minimum spanning tree
 - Edge-weighted graph data type
