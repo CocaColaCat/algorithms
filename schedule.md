@@ -12,7 +12,7 @@ algorithms to go:
 2015/12/08
 - Directed cycle detection
  
-- Depth-first orders and topologicalsort
+- Depth-first orders and topological sort
 - Kosaraju’salgorithm
 - Minimum spanning tree
 - Edge-weighted graph data type

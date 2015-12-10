@@ -6,3 +6,4 @@
 - paths detection: gcc ./src/graph/path_detection.c -o ./bin/path_detection && ./bin/path_detection
 - shortest paths: gcc ./src/graph/shortest_path.c -o ./bin/shortest_path && ./bin/shortest_path
 - cycle detection: gcc ./src/graph/dc_detection.c -o ./bin/dc_detection && ./bin/dc_detection
+- topological sort: gcc ./src/graph/topological_sort.c -o ./bin/topological_sort && ./bin/topological_sort
