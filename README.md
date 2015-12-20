@@ -8,3 +8,5 @@
 - cycle detection: gcc ./src/graph/dc_detection.c -o ./bin/dc_detection && ./bin/dc_detection
 - cycle detection version 2: gcc ./src/graph/dc_detection_v2.c -o ./bin/dc_detection_v2 && ./bin/dc_detection_v2
 - topological sort: gcc ./src/graph/topological_sort.c -o ./bin/topological_sort && ./bin/topological_sort
+- minimal spanning tree: gcc ./src/graph/mst.c -o ./bin/mst && ./bin/mst
+- gcc ./src/graph/weight_graph_and_priority_queue.c -g -o ./bin/weight_graph_and_priority_queue && ./bin/weight_graph_and_priority_queue

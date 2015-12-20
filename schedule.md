@@ -11,14 +11,18 @@ algorithms to go:
 
 2015/12/08
 - Directed cycle detection
- 
+
+2015/12/13 
 - Depth-first orders and topological sort
 - Kosaraju’salgorithm
+ 
 - Minimum spanning tree
+ 
 - Edge-weighted graph data type
 - Prim’s algorithm
 - Kruskal’s algorithm
 - Edge-weighted digraph data types
+ 
 - Dijkstra’s algorithm
 - Parallel precedence-constrained scheduling
 - topological sort
