@@ -10,28 +10,40 @@ bool* createBooleanArray(int V){
 	return visited;
 };
 
-void visit(Graph* graph, bool* visited, int* edgeTo, int v){
+void visit(Graph* graph, PriorityQueue* pq, bool* visited, int v){
 	visited[v] = true;
-	graph->array[v].head
-	// start from 0, add all adjacancy node to pq, while pq not empty, do the loop
-	// add edge to pg
+	AdjListNode *head = graph->array[v].head;
+	while(head){
+		int other = (head->curEdge->w == v) ? head->curEdge->v : head->curEdge->w;
+		if(!visited[other]){
+			insertPq(pq, head->curEdge);
+		}
+		head = head->next;
+	}
 }
 
-void findMst(Graph* graph){
-	int* edgeTo = malloc(graph->V*sizeof(int));
+MST* findMst(Graph* graph){
+	MST* mst = createMST(graph->V);
 	bool* visited = createBooleanArray(graph->V);
-	PriorityQueue* pq = createPriorityQuese();
-	visit(graph, visited, edgeTo, 0);
-	while(!IsEmpty(pq)){
-		Edge* edge = queueTop(pq);
-		if(visited[edge->v] && visited[edge->w]) continous;
-		queuePush(pq, edge);
-		if(visited[edge->v]){
-			visited(graph, visited, edgeTo, edge->w);
-		}else if(visited[edge->w]){
-			visited(graph, visited, edgeTo, edge->v);
+	PriorityQueue* pq = createPq(graph->E);
+	visit(graph, pq, visited, 0);
+	while(!isPqEmpty(pq)){
+		Edge* edge = topPq(pq);		
+		delPq(pq);
+		if(visited[edge->v] && visited[edge->w]){
+			// printf("node is ineligible\n");
+		}else{
+			// printf("----- about to insert node v %d, w %d\n", edge->v, edge->w);
+			insertEdgeToMST(mst, edge);
+			if(!visited[edge->v]){
+				visit(graph, pq, visited, edge->v);
+			}
+			if(!visited[edge->w]){
+				visit(graph, pq, visited, edge->w);
+			}
 		}
 	}
+	return mst;
 };
 
 Graph* createWeightGraph(){
@@ -75,7 +87,8 @@ Graph* createWeightGraph(){
 
 int main(){
 	Graph* graph = createWeightGraph();
-	findMst(graph);
-	printGraph(graph);
+	MST* mst = findMst(graph);
+	printf("finish and print mst\n");
+	printMst(mst);
 	return 0;
 }

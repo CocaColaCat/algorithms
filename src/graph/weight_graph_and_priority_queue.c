@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+typedef enum { false, true } bool;
 
 typedef struct Edge{
 	int v;
@@ -21,6 +22,7 @@ typedef struct AdjList
 typedef struct WeightGraph
 {
 	int V;
+	int E;
 	struct AdjList* array;
 }Graph;
 
@@ -36,6 +38,7 @@ Graph* createGraph(int V)
 {
 	Graph *graph = malloc(sizeof(Graph));
 	graph->V = V;
+	graph->E = 0;
 	graph->array = malloc(V*sizeof(AdjList)); // 创建 array of AdjList
 	int i;
 	for(int i=0; i<V; i++){
@@ -53,6 +56,7 @@ AdjListNode* newAdjListNode(Edge* curEdge)
 };
 
 void addEdge(Graph *graph, Edge* edge){
+	graph->E = graph->E+1;
 	int v = edge->v;
 	AdjListNode* vnode = newAdjListNode(edge);
 	vnode->next = graph->array[v].head;
@@ -76,27 +80,36 @@ void printGraph(Graph *graph){
 	}
 };
 
+typedef struct MST
+{
+	int size;
+	struct Edge** edges;
+}MST;
+
+MST* createMST(int size){
+	MST* mst = malloc(sizeof(MST));
+	mst->size = 0;
+	mst->edges = malloc(size*sizeof(Edge *));
+	return mst;
+};
+
+void insertEdgeToMST(MST* mst, Edge* edge){
+	mst->edges[mst->size] = edge;
+	mst->size = mst->size+1;
+};
+
+void printMst(MST* mst){
+	Edge* edge;
+	for(int i=0; (edge = mst->edges[i]); i++){
+		printf("mst node from %d -> %d, weight is %.2f\n", edge->v, edge->w, edge->weight);
+	}
+};
+
 typedef struct PriorityQueue
 {
 	int size;
 	struct Edge** heap;
 }PriorityQueue;
-
-PriorityQueue* createPq(int size){
-	PriorityQueue* pq = malloc(sizeof(PriorityQueue));
-	pq->size = 0;
-	pq->heap = malloc(size*sizeof(Edge *));
-	return pq;
-};
-
-Edge* topPq(PriorityQueue* pq){
-	if(pq->size==1){
-		printf("queue is empty.");
-		return NULL;
-	}else{
-		return pq->heap[1];
-	}
-};
 
 void swim(PriorityQueue* pq, int index){
 	if(index < 2){
@@ -120,6 +133,23 @@ void insertPq(PriorityQueue* pq, Edge* edge){
 	swim(pq, pq->size-1);
 };
 
+PriorityQueue* createPq(int size){
+	PriorityQueue* pq = malloc(sizeof(PriorityQueue));
+	pq->size = 0;
+	pq->heap = malloc((size+1)*sizeof(Edge *));
+	insertPq(pq, NULL);
+	return pq;
+};
+
+Edge* topPq(PriorityQueue* pq){
+	if(pq->size==1){
+		printf("queue is empty.");
+		return NULL;
+	}else{
+		return pq->heap[1];
+	}
+};
+
 void sink(PriorityQueue* pq, int index){
 	if(index > (pq->size-1)/2){ // (pq->size-1)/2 最后一个有子节点的父节点的下标。如果大于这个下标，则停止递归。
 		return;
@@ -136,7 +166,7 @@ void sink(PriorityQueue* pq, int index){
 			smallestIndex = leftIndex;
 		}
 		// compare left and right
-		if((smallestIndex!=0)&&(left->weight > right->weight)){
+		if((smallestIndex!=0)&& right && (left->weight > right->weight)){
 			smallestIndex = rightIndex;
 		}
 		// switch node position
@@ -156,12 +186,10 @@ void sink(PriorityQueue* pq, int index){
 };
 
 void delPq(PriorityQueue* pq){
-	printf("pq size is %d\n", pq->size);
 	if(pq->size<=1){
 		printf("queue is empty");
 	}else{
 		if(pq->size==2){
-			printf("size is 2");
 			pq->heap[1] = NULL;
 			pq->size = pq->size-1;
 		}else{
@@ -174,10 +202,15 @@ void delPq(PriorityQueue* pq){
 	}
 };
 
+bool isPqEmpty(PriorityQueue* pq){
+	return ((pq->size==1) ? true : false);
+};
+
 void printPq(PriorityQueue* pq){
 	int i = 1;
 	Edge* edge = pq->heap[i];
 	while(edge){
+		printf("pq node is v %d, w %d, weight %.2f\n", edge->v, edge->w, edge->weight);
 		i ++;
 		edge = pq->heap[i];
 	}
