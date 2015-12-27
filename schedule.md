@@ -16,16 +16,18 @@ algorithms to go:
 - Depth-first orders and topological sort
 - Kosaraju’salgorithm
  
+2015/12/20
 - Minimum spanning tree
- 
 - Edge-weighted graph data type
 - Prim’s algorithm
+- Eager version Prim's
+
+2015/12/27
+- Union Set
 - Kruskal’s algorithm
-- Edge-weighted digraph data types
- 
+
 - Dijkstra’s algorithm
 - Parallel precedence-constrained scheduling
-- topological sort
 - Bellman-Ford
 - Word ladder 单词变换问题
 - Surrounded Regions（围湖造田）
@@ -76,6 +78,13 @@ algorithms to go:
 - priority queue
 - Heapsort  
 
+**Data Structure**
+- queue
+- stack
+- Hashtable
+- binary tree
+- priority queue
+- union find(并查集)
 
 
 

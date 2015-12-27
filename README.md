@@ -10,3 +10,5 @@
 - topological sort: gcc ./src/graph/topological_sort.c -o ./bin/topological_sort && ./bin/topological_sort
 - minimal spanning tree: gcc ./src/graph/mst.c -o ./bin/mst && ./bin/mst
 - gcc ./src/graph/weight_graph_and_priority_queue.c -g -o ./bin/weight_graph_and_priority_queue && ./bin/weight_graph_and_priority_queue
+- union find(quick find): gcc ./src/data_structure/union_set.c -o ./bin/union_set && ./bin/union_set
+- union find(quick union): gcc ./src/data_structure/union_set_v2.c -o ./bin/union_set_v2 && ./bin/union_set_v2
