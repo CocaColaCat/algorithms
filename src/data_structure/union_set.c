@@ -53,20 +53,20 @@ void unionFind(UnionSet* set, int p, int q){
 	}
 };
 
-int main(){
-	int count = 10;
-	UnionSet* set = initUnionSet(count);
-	unionFind(set,4,3);
-	unionFind(set,3,8);
-	unionFind(set,6,5);
-	unionFind(set,9,4);
-	unionFind(set,2,1);
-	unionFind(set,8,9);
-	unionFind(set,5,0);
-	unionFind(set,7,2);
-	unionFind(set,6,1);
-	unionFind(set,1,0);
-	unionFind(set,6,7);
-	printf("components count is %i\n", set->count);
-	return 1;
-}
+// int main(){
+// 	int count = 10;
+// 	UnionSet* set = initUnionSet(count);
+// 	unionFind(set,4,3);
+// 	unionFind(set,3,8);
+// 	unionFind(set,6,5);
+// 	unionFind(set,9,4);
+// 	unionFind(set,2,1);
+// 	unionFind(set,8,9);
+// 	unionFind(set,5,0);
+// 	unionFind(set,7,2);
+// 	unionFind(set,6,1);
+// 	unionFind(set,1,0);
+// 	unionFind(set,6,7);
+// 	printf("components count is %i\n", set->count);
+// 	return 1;
+// }
