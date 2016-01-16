@@ -10,3 +10,7 @@ void insert(IndexMinQueue* queue, int i, double value);
 void swim(IndexMinQueue* queue, int i);
 bool isEmpty(IndexMinQueue* queue);
 double topValue(IndexMinQueue* queue);
+void deleteTop(IndexMinQueue* queue);
+void sink(IndexMinQueue* queue, int i);
+void printQueue(IndexMinQueue* queue);
+bool isContained(IndexMinQueue* queue, int i);
