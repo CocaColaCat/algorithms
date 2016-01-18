@@ -16,3 +16,4 @@
 - indexed min priority queue: gcc ./src/data_structure/indexed_min_priority_queue.c -o ./bin/indexed_min_priority_queue && ./bin/indexed_min_priority_queue
 - directed_weight_graph: gcc ./src/data_structure/directed_weight_graph.c -o ./bin/directed_weight_graph && ./bin/directed_weight_graph
 - shortest spanning tree: gcc ./src/graph/spt.c -o ./bin/spt && ./bin/spt
+- binary search tree: gcc ./src/data_structure/binary_search_tree.c -o ./bin/binary_search_tree && ./bin/binary_search_tree

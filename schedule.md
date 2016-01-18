@@ -26,7 +26,9 @@ algorithms to go:
 - Union Set
 - Kruskal’s algorithm
 
+2016/01/16
 - Dijkstra’s algorithm
+
 - Parallel precedence-constrained scheduling
 - Bellman-Ford
 - Word ladder 单词变换问题
@@ -57,9 +59,11 @@ algorithms to go:
 - Reading and writing binary data
 
 **Searching**
+2016/01/17
 - symbol table
 - Binary search in an ordered array
 - binary search tree
+
 - 2-3 search trees
 - Red-black BSTs
 - Hash functions
