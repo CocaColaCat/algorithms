@@ -44,8 +44,8 @@ Node* putNode(Node* node, char key, int value){
 void printNode(Node* node){
 	if(node == NULL)
 		return;
-	printNode(node->left);
 	printf("key is %c, value is %i, size is %i\n", node->key, node->value, node->N);
+	printNode(node->left);
 	printNode(node->right);
 }
 
@@ -54,30 +54,59 @@ void printTree(BST* tree){
 	printNode(root);
 }
 
-// Node* deleteNode(Node* node, char key){
-// 	if(node==NULL)
-// 		return;
-// 	if(node->key > key){
-// 		node->left = deleteNode(node->left, key);
-// 	}else if(node->key < key){
-// 		node->right = deleteNode(node->right, key);
-// 	}else{
-// 		Node* x = node;
-// 		Node* successor = min(node);
-// 		if(node->left == NULL)
-// 	}
-// }
+Node* min(Node* node){
+	if(node->left == NULL){
+		return node;
+	}else{
+		return min(node->left);
+	}
+}
 
-// void delete(BST* tree, char key){
-// 	tree->root = deleteNode(tree->node, key);
-// }
+Node* deleteMin(Node* node){
+	if(node->left == NULL)
+		return node->right;
+
+	node->left = deleteMin(node->left);
+	node->N = size(node->left) + size(node->right) + 1;
+	return node;
+}
+
+void delete(BST* tree, char key){
+	tree->root = _delete(tree->root, key);
+}
+
+Node* _delete(Node* node, char key){
+	if(node == NULL)
+		return NULL;
+	if(node->key > key){
+		node->left = _delete(node->left, key);
+	}else if(node->key < key){
+		node->right = _delete(node->right, key);
+	}else{
+		printf("find match key is %c\n", node->key);
+		if(node->left == NULL)
+			return node->right;
+		if(node->right == NULL)
+			return node->left;
+		Node* t = node;
+		node = min(t->right);
+		printf("now target change to the min of right tree %c\n", node->key);
+		node->right = deleteMin(t->right);
+		node->left = t->left;
+	}
+	node->N = size(node->left) + size(node->right) + 1;
+	return node;
+}
 
 int main(){
 	char keys[] = {'S', 'E', 'A', 'R', 'C', 'H', 'E', 'X', 'A', 'M', 'P', 'L', 'E'};
 	BST* tree = createTree();
 	for(int i = 0; i< (int)(sizeof(keys)/sizeof(char)); i++)
 		put(tree, keys[i], i);
-	printf("tree size is %i\n", tree->root->N);
+	printTree(tree);
+	delete(tree, 'E');
+	printTree(tree);
+	delete(tree, 'M');
 	printTree(tree);
 	return 1;
 }

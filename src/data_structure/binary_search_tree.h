@@ -14,4 +14,7 @@ BST* createTree();
 void put(BST* tree, char key, int value);
 int size(Node* node);
 Node* putNode(Node* node, char key, int value);
+Node* min(Node* node);
 void delete(BST* tree, char key);
+Node* _delete(Node* node, char key);
+Node* deleteMin(Node* node);
