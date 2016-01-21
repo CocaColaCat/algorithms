@@ -141,7 +141,6 @@ Node* select(BST* tree, int r){
 }
 
 Node* _select(Node* node, int r){
-
 	if ((node == NULL) || (size(node->left) == r))
 		return node;
 
@@ -150,8 +149,30 @@ Node* _select(Node* node, int r){
 	}else{
 		return _select(node->right, r - 1 - size(node->left));
 	}
-
 }
+
+void keysBetween(BST* tree, char lo, char hi){
+	_keys(tree->root, lo, hi);
+	printf("\n");
+}
+
+void _keys(Node* node, char lo, char hi){
+	if(node == NULL)
+		return;
+
+	// int loCompare = lo > node->key;
+	// int hiCompare = hi > node->key;
+	if(node->key > lo){
+		_keys(node->left, lo, hi);
+	}
+	if( (node->key >= lo) && (node->key <= hi) ){
+		printf("%c -> ", node->key);
+	}
+	if( node->key < hi){
+		_keys(node->right, lo, hi);
+	}
+}
+
 
 int main(){
 	char keys[] = {'S', 'E', 'A', 'R', 'C', 'H', 'E', 'X', 'A', 'M', 'P', 'L', 'E'};
@@ -170,13 +191,15 @@ int main(){
 	// Node* t2 = ceiling(tree, k2);
 	// printf("ceiling for %c is %c\n", k2, t2->key);
 
-	int r = -1;
-	Node* t = select(tree, r);
-	if(t == NULL){
-		printf("can not find key for %i\n", r);
-	}else{
-		printf("rank for %i is %c\n", r, t->key);
-	}
+	// int r = -1;
+	// Node* t = select(tree, r);
+	// if(t == NULL){
+	// 	printf("can not find key for %i\n", r);
+	// }else{
+	// 	printf("rank for %i is %c\n", r, t->key);
+	// }
+
+	keysBetween(tree, 'F', 'T');
 
 	return 1;
 }

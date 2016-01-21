@@ -24,3 +24,5 @@ Node* ceiling(BST* tree, char key);
 Node* _ceiling(Node* node, char key);
 Node* select(BST* tree, int c);
 Node* _select(Node* node, int c);
+void keysBetween(BST* tree, char lo, char hi);
+void _keys(Node* node, char lo, char hi);
