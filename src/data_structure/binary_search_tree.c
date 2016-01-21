@@ -44,14 +44,16 @@ Node* putNode(Node* node, char key, int value){
 void printNode(Node* node){
 	if(node == NULL)
 		return;
-	printf("key is %c, value is %i, size is %i\n", node->key, node->value, node->N);
 	printNode(node->left);
+	// printf("key is %c, value is %i, size is %i\n", node->key, node->value, node->N);
+	printf("%c ->", node->key);
 	printNode(node->right);
 }
 
 void printTree(BST* tree){
 	Node* root = tree->root;
 	printNode(root);
+	printf("\n");
 }
 
 Node* min(Node* node){
@@ -116,17 +118,41 @@ Node* _floor(Node* x, char key){
 	}
 }
 
+Node* ceiling(BST* tree, char key){
+	return _ceiling(tree->root, key);
+}
+
+Node* _ceiling(Node* t, char key){
+	if((t==NULL) || (t->key == key))
+		return t;
+	if(t->key < key){
+		return _ceiling(t->right, key);
+	}
+	Node* x = _ceiling(t->left, key);
+	if(x==NULL){
+		return t;
+	}else{
+		return x;
+	}
+}
+
 int main(){
 	char keys[] = {'S', 'E', 'A', 'R', 'C', 'H', 'E', 'X', 'A', 'M', 'P', 'L', 'E'};
 	BST* tree = createTree();
 	for(int i = 0; i< (int)(sizeof(keys)/sizeof(char)); i++)
 		put(tree, keys[i], i);
-	printTree(tree);
-	// delete(tree, 'E');
 	// printTree(tree);
+	// delete(tree, 'E');
+	printTree(tree);
 
-	char k = 'Z';
-	Node* t = floorOf(tree, 'Z');
+	char k = 'B';
+	Node* t = floorOf(tree, k);
 	printf("floor for %c is %c\n", k, t->key);
+
+
+
+	char k2 = 'N';
+	Node* t2 = ceiling(tree, k2);
+	printf("ceiling for %c is %c\n", k2, t2->key);
 	return 1;
 }

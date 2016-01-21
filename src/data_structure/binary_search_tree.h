@@ -20,3 +20,5 @@ Node* _delete(Node* node, char key);
 Node* deleteMin(Node* node);
 Node* floorOf(BST* tree, char key);
 Node* _floor(Node* node, char key);
+Node* ceiling(BST* tree, char key);
+Node* _ceiling(Node* node, char key);
