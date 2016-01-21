@@ -136,23 +136,47 @@ Node* _ceiling(Node* t, char key){
 	}
 }
 
+Node* select(BST* tree, int r){
+	return _select(tree->root, r);
+}
+
+Node* _select(Node* node, int r){
+
+	if ((node == NULL) || (size(node->left) == r))
+		return node;
+
+	if(size(node->left) > r){
+		return _select(node->left, r);
+	}else{
+		return _select(node->right, r - 1 - size(node->left));
+	}
+
+}
+
 int main(){
 	char keys[] = {'S', 'E', 'A', 'R', 'C', 'H', 'E', 'X', 'A', 'M', 'P', 'L', 'E'};
 	BST* tree = createTree();
 	for(int i = 0; i< (int)(sizeof(keys)/sizeof(char)); i++)
 		put(tree, keys[i], i);
-	// printTree(tree);
+
 	// delete(tree, 'E');
 	printTree(tree);
 
-	char k = 'B';
-	Node* t = floorOf(tree, k);
-	printf("floor for %c is %c\n", k, t->key);
+	// char k = 'B';
+	// Node* t = floorOf(tree, k);
+	// printf("floor for %c is %c\n", k, t->key);
 
+	// char k2 = 'N';
+	// Node* t2 = ceiling(tree, k2);
+	// printf("ceiling for %c is %c\n", k2, t2->key);
 
+	int r = -1;
+	Node* t = select(tree, r);
+	if(t == NULL){
+		printf("can not find key for %i\n", r);
+	}else{
+		printf("rank for %i is %c\n", r, t->key);
+	}
 
-	char k2 = 'N';
-	Node* t2 = ceiling(tree, k2);
-	printf("ceiling for %c is %c\n", k2, t2->key);
 	return 1;
 }

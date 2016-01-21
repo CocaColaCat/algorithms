@@ -22,3 +22,5 @@ Node* floorOf(BST* tree, char key);
 Node* _floor(Node* node, char key);
 Node* ceiling(BST* tree, char key);
 Node* _ceiling(Node* node, char key);
+Node* select(BST* tree, int c);
+Node* _select(Node* node, int c);
