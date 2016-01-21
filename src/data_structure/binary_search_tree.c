@@ -98,15 +98,35 @@ Node* _delete(Node* node, char key){
 	return node;
 }
 
+Node* floorOf(BST* tree, char key){
+	return _floor(tree->root, key);
+}
+
+Node* _floor(Node* x, char key){
+	if((x == NULL) || (x->key == key))
+		return x;
+	if(x->key > key){
+		return _floor(x->left, key);
+	}
+	Node* t = _floor(x->right, key);
+	if(t == NULL){
+		return x;
+	}else{
+		return t;
+	}
+}
+
 int main(){
 	char keys[] = {'S', 'E', 'A', 'R', 'C', 'H', 'E', 'X', 'A', 'M', 'P', 'L', 'E'};
 	BST* tree = createTree();
 	for(int i = 0; i< (int)(sizeof(keys)/sizeof(char)); i++)
 		put(tree, keys[i], i);
 	printTree(tree);
-	delete(tree, 'E');
-	printTree(tree);
-	delete(tree, 'M');
-	printTree(tree);
+	// delete(tree, 'E');
+	// printTree(tree);
+
+	char k = 'Z';
+	Node* t = floorOf(tree, 'Z');
+	printf("floor for %c is %c\n", k, t->key);
 	return 1;
 }
