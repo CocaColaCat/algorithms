@@ -17,3 +17,4 @@
 - directed_weight_graph: gcc ./src/data_structure/directed_weight_graph.c -o ./bin/directed_weight_graph && ./bin/directed_weight_graph
 - shortest spanning tree: gcc ./src/graph/spt.c -o ./bin/spt && ./bin/spt
 - binary search tree: gcc ./src/data_structure/binary_search_tree.c -o ./bin/binary_search_tree && ./bin/binary_search_tree
+- red black tree: gcc ./src/searching_algorithms/red_black_tree.c -o ./bin/red_black_tree && ./bin/red_black_tree

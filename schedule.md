@@ -12,10 +12,10 @@ algorithms to go:
 2015/12/08
 - Directed cycle detection
 
-2015/12/13 
+2015/12/13
 - Depth-first orders and topological sort
 - Kosaraju’salgorithm
- 
+
 2015/12/20
 - Minimum spanning tree
 - Edge-weighted graph data type
@@ -64,8 +64,10 @@ algorithms to go:
 - Binary search in an ordered array
 - binary search tree
 
+2016/01/27
 - 2-3 search trees
 - Red-black BSTs
+
 - Hash functions
 - Hashing with separate chaining
 - Hashing with linear probing
@@ -80,7 +82,7 @@ algorithms to go:
 - Quicksort
 - 3-way quicksort
 - priority queue
-- Heapsort  
+- Heapsort
 
 **Data Structure**
 - queue
@@ -89,6 +91,9 @@ algorithms to go:
 - binary tree
 - priority queue
 - union find(并查集)
+
+***others**
+- skip list
 
 
 
