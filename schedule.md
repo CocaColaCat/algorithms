@@ -3,31 +3,31 @@ algorithms to go:
 **Graph**
 
 2015/12/07
-- Symbol graphs
-- Degrees of separation
-- Digraph Implementation
-- Single-source directed paths
-- Single-source shortest directed paths
+- Symbol graphs（理解）
+- Degrees of separation（理解）
+- Digraph Implementation（理解）
+- Single-source directed paths（实现）
+- Single-source shortest directed paths（实现）
 
 2015/12/08
-- Directed cycle detection
+- Directed cycle detection（实现）
 
 2015/12/13
-- Depth-first orders and topological sort
+- Depth-first orders（实现） and topological sort（理解）
 - Kosaraju’salgorithm
 
 2015/12/20
-- Minimum spanning tree
-- Edge-weighted graph data type
-- Prim’s algorithm
-- Eager version Prim's
+- Minimum spanning tree（实现）
+- Edge-weighted graph data type（实现）
+- Prim’s algorithm（实现）
+- Eager version Prim's（理解）
 
 2015/12/27
-- Union Set
-- Kruskal’s algorithm
+- Union Set（实现）
+- Kruskal’s algorithm（实现）
 
 2016/01/16
-- Dijkstra’s algorithm
+- Dijkstra’s algorithm（实现）
 
 - Parallel precedence-constrained scheduling
 - Bellman-Ford
@@ -60,17 +60,18 @@ algorithms to go:
 
 **Searching**
 2016/01/17
-- symbol table
-- Binary search in an ordered array
-- binary search tree
+- symbol table（理解）
+- Binary search in an ordered array（理解）
+- binary search tree（实现）
 
 2016/01/27
-- 2-3 search trees
-- Red-black BSTs
+- 2-3 search trees（理解）
+- Red-black BSTs（实现）
 
-- Hash functions
-- Hashing with separate chaining
-- Hashing with linear probing
+2016/01/30
+- Hash functions(理解)
+- Hashing with separate chaining（理解）
+- Hashing with linear probing（理解）
 
 **Sorting**
 - Selection sort
