@@ -49,8 +49,11 @@ algorithms to go:
 - Manacher算法
 - Boyer-Moore(BM)算法
 - Huffman编码
+
+2016/02/02
 - Key-indexed counting
 - significant-digit first LSD string sort
+
 - most-significant-digit-first (MSD) sort
 - Three-way string quicksort
 - Tries
