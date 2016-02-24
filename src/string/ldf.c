@@ -32,7 +32,7 @@ void ldf(char *strs[], int N, int W){
 
 int main(){
 	const int L = 13;
-	char *strs[L] = { "4PGC938", "2IYE230", "3CIO720", "1ICK750", "1OHV845", "4JZY524", 
+	char *strs[L] = { "4PGC938", "2IYE230", "3CIO720", "1ICK750", "1OHV845", "4JZY524",
 		"1ICK750", "3CIO720", "1OHV845", "1OHV845", "2RLA629", "2RLA629", "3ATW723" };
 
 	ldf(strs, L, 7);

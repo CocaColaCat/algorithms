@@ -45,7 +45,10 @@ algorithms to go:
 
 **String**
 - Longest Common Subsequence
-- Knuth-Morris-Pratt(KMP)算法
+
+2016/02/22
+- Knuth-Morris-Pratt(KMP)算法 (实现)
+
 - Manacher算法
 - Boyer-Moore(BM)算法
 - Huffman编码
