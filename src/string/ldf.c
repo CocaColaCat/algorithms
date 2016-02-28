@@ -6,7 +6,7 @@ const int R = 256;
 void ldf(char *strs[], int N, int W){
 
 	for(int x=(W-1); x >= 0; x--){
-		int count[R] = {0};
+		int count[R+1] = {0};
 		char *aux[N];
 
 		for(int n=0; n<N ; n++){
@@ -14,7 +14,7 @@ void ldf(char *strs[], int N, int W){
 			count[strs[n][x]+1] += 1;
 		}
 
-		for(int k=0;k<=R;k++){
+		for(int k=0;k<R;k++){
 			count[k+1] += count[k];
 		}
 

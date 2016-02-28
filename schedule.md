@@ -48,13 +48,18 @@ algorithms to go:
 - Knuth-Morris-Pratt(KMP)算法
 - Manacher算法
 - Boyer-Moore(BM)算法
-- Huffman编码
+
+2016/02/27
+- Huffman编码 (理解)
+- LZW encoding(理解)
 
 2016/02/02
-- Key-indexed counting
-- significant-digit first LSD string sort
+- Key-indexed counting（理解）
+- significant-digit first LSD string sort(实现)
 
-- most-significant-digit-first (MSD) sort
+2016/02/08
+- most-significant-digit-first (MSD) sort（实现）
+
 - Three-way string quicksort
 - Tries
 - Ternary search tries (TSTs)

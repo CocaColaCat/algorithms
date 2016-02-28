@@ -19,3 +19,4 @@
 - binary search tree: gcc ./src/data_structure/binary_search_tree.c -o ./bin/binary_search_tree && ./bin/binary_search_tree
 - red black tree: gcc ./src/searching_algorithms/red_black_tree.c -o ./bin/red_black_tree && ./bin/red_black_tree
 - least significant digit first: gcc ./src/string/ldf.c -o ./bin/ldf && ./bin/ldf
+- most significant digit first: gcc ./src/string/mdf.c -o ./bin/mdf && ./bin/mdf
