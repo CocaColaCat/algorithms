@@ -45,7 +45,10 @@ algorithms to go:
 
 **String**
 - Longest Common Subsequence
-- Knuth-Morris-Pratt(KMP)算法
+
+2016/02/22
+- Knuth-Morris-Pratt(KMP)算法 (实现)
+
 - Manacher算法
 - Boyer-Moore(BM)算法
 
@@ -74,7 +77,7 @@ algorithms to go:
 
 2016/01/27
 - 2-3 search trees（理解）
-- Red-black BSTs（实现）
+- Red-black BSTs（实现插入部分，删除没有实现）
 
 2016/01/30
 - Hash functions(理解)
