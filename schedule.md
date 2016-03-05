@@ -43,6 +43,9 @@ algorithms to go:
 - 矩阵连乘
 - 格子取数问题
 
+2016/03/05
+- edit distance(实现)
+
 **String**
 - Longest Common Subsequence
 

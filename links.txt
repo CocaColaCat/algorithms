@@ -1,2 +1,4 @@
 Array In C References
 http://www.zentut.com/c-tutorial/c-array/
+
+http://tekmarathon.com/algos-ds/

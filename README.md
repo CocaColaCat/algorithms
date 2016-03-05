@@ -21,3 +21,4 @@
 - least significant digit first: gcc ./src/string/ldf.c -o ./bin/ldf && ./bin/ldf
 - most significant digit first: gcc ./src/string/mdf.c -o ./bin/mdf && ./bin/mdf
 - KMP: gcc ./src/string/kmp.c -o ./bin/kmp && ./bin/kmp
+- edit distance: gcc ./src/dp/edit_distance.c -o ./bin/edit_distance && ./bin/edit_distance
