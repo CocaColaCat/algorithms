@@ -39,12 +39,14 @@ algorithms to go:
 **贪心和动态规划**
 - Palindrome Partitioning（回文划分）
 - 贪心（MST)
-- Longest Increasing Subsequence
 - 矩阵连乘
 - 格子取数问题
 
 2016/03/05
 - edit distance(实现)
+
+2016/03/06
+- Longest Increasing Subsequence(实现)
 
 **String**
 - Longest Common Subsequence
