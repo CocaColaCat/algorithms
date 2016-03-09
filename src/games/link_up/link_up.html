@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>简单的连连看游戏 V0.1</title>
+    <style type="text/css">
+      body{
+        background-color: beige;
+      }
+
+      #game-board{
+        margin: 20px auto auto auto;
+        width: 800px;
+        height: 500px;
+        background-color: white;
+        border: solid 1px black;
+      }
+      #grid{
+        /*margin: 20px auto auto auto;*/
+        width: 600px;
+        height: 500px;
+        border-right:solid 1px black;
+      }
+
+    </style>
+    <script type="text/javascript">
+      var COLORS = ['red','yellow','blue','green','orange','pink'];
+
+      var Node = function (x,y,isBlank,left,right,up,down,color) {
+          this.x = x;
+          this.y = x;
+          this.isBlank = x;
+          this.left = left;
+          this.right = right;
+          this.up = up;
+          this.down = down;
+          this.color = color;
+      };
+
+      var lines = [];
+      for(var i=0;i<11;i++){
+      lines[i] = [];
+      // blank nodes
+      var x,y,left,right,up,down,isBlank,color;
+      for(var j=0;j<15;j++){
+        x = j*4;
+        y = i*4;
+        if(i%2==0){
+          isBlank = true;
+        }else{
+          isBlank = false;
+          color = COLORS[Math.round(Math.random()*COLORS.count)];
+        }
+      }
+      var node = new Node(x,y,isBlank,left,right,up,down,color);
+      lines[i].push(node);
+
+      var i=0;
+      var gridEle = document.getElementById('grid');
+      while(lines[i]){
+        var j=0;
+        while(lines[i][j]){
+          var nodeEle = document.createElement("div");
+          nodeEle.style.cssText="width:4px;height:4px;background:#636363";
+          gridEle.append()
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="game-board">
+      <div id="grid">
+      </div>
+    </div>
+  </body>
+</html>
