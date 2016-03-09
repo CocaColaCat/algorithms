@@ -36,34 +36,44 @@
           this.color = color;
       };
 
-      var lines = [];
-      for(var i=0;i<11;i++){
-      lines[i] = [];
-      // blank nodes
-      var x,y,left,right,up,down,isBlank,color;
-      for(var j=0;j<15;j++){
-        x = j*4;
-        y = i*4;
-        if(i%2==0){
-          isBlank = true;
-        }else{
-          isBlank = false;
-          color = COLORS[Math.round(Math.random()*COLORS.count)];
-        }
-      }
-      var node = new Node(x,y,isBlank,left,right,up,down,color);
-      lines[i].push(node);
+      var lines = new Array();
 
-      var i=0;
-      var gridEle = document.getElementById('grid');
-      while(lines[i]){
-        var j=0;
-        while(lines[i][j]){
-          var nodeEle = document.createElement("div");
-          nodeEle.style.cssText="width:4px;height:4px;background:#636363";
-          gridEle.append()
+      for(var i=0;i<11;i++){
+        lines[i] = new Array();
+        // blank nodes
+        var x,y,left,right,up,down,isBlank,color;
+        for(var j=0;j<15;j++){
+          x = j*4;
+          y = i*4;
+          if(i%2==0){
+            isBlank = true;
+            color = 'white';
+          }else{
+            isBlank = false;
+            var index = Math.round(Math.random()*(COLORS.length-1))
+            color = COLORS[index];
+            console.log(index)
+            console.log(color);
+          }
+          var node = new Node(x,y,isBlank,left,right,up,down,color);
+          lines[i].push(node);
         }
-      }
+      };
+      console.log(lines);
+
+      var gridEle = document.getElementById('grid');
+      for(var i=0;i<11;i++){
+        for(var j=0;j<15;j++){
+          var nodeEle = document.createElement("div");
+          nodeEle.style.width = '4px';
+          nodeEle.style.height = '4px';
+          // console.log("i is "+i+" j is "+j);
+          // console.log(lines[i][j]);
+          nodeEle.style.backgroundColor = lines[i][j].color;
+          gridEle.appendChild(nodeEle);
+        }
+      };
+
     </script>
   </head>
   <body>
