@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>
+		
+	</title>
+</head>
+<body>
+	<canvas id='myCanvas' height="500px" width="500px"></canvas>
+
+	<script type="text/javascript">
+		(function(){
+			var canvas = document.getElementById('myCanvas');
+			console.log(canvas);
+			var	ctx = canvas.getContext('2d');
+			ctx.fillRect(50, 0, 100, 100);
+			
+			// ctx.beginPath();
+			// ctx.moveTo(0,0);
+			// ctx.lineTo(0,100);
+			// ctx.lineTo(100,100);
+			// ctx.closePath();
+			// ctx.fill();
+		})();
+	</script>
+</body>
+</html>

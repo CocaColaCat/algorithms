@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>简单的连连看游戏 V0.1</title>
+    <title>link up V0.1</title>
     <style type="text/css">
       body{
         background-color: beige;
@@ -9,26 +9,36 @@
 
       #game-board{
         margin: 20px auto auto auto;
-        width: 800px;
-        height: 500px;
+        width: 700px;
+        height: 700px;
         background-color: white;
         border: solid 1px black;
+        background-color: brown;
+        /*position: relative;  */
       }
       #grid{
-        /*margin: 20px auto auto auto;*/
-        width: 600px;
-        height: 500px;
-        border-right:solid 1px black;
+        background-color: grey;
+        margin: 50px 50px auto 50px;   
       }
 
     </style>
+  </head>
+  <body>
+    <div id="game-board">
+      <canvas id='grid' height="440px" width="600px" style="">
+      </canvas>
+    </div>
+
     <script type="text/javascript">
       var COLORS = ['red','yellow','blue','green','orange','pink'];
+      var nodeWidth = 40;
+      var nodePerRow = 15;
+      var nodePerColumn = 11;
 
       var Node = function (x,y,isBlank,left,right,up,down,color) {
           this.x = x;
-          this.y = x;
-          this.isBlank = x;
+          this.y = y;
+          this.isBlank = isBlank;
           this.left = left;
           this.right = right;
           this.up = up;
@@ -38,13 +48,12 @@
 
       var lines = new Array();
 
-      for(var i=0;i<11;i++){
+      for(var i=0;i<nodePerColumn;i++){
         lines[i] = new Array();
-        // blank nodes
         var x,y,left,right,up,down,isBlank,color;
-        for(var j=0;j<15;j++){
-          x = j*4;
-          y = i*4;
+        for(var j=0;j<nodePerRow;j++){
+          x = j*nodeWidth;
+          y = i*nodeWidth;
           if(i%2==0){
             isBlank = true;
             color = 'white';
@@ -52,34 +61,27 @@
             isBlank = false;
             var index = Math.round(Math.random()*(COLORS.length-1))
             color = COLORS[index];
-            console.log(index)
-            console.log(color);
           }
           var node = new Node(x,y,isBlank,left,right,up,down,color);
           lines[i].push(node);
         }
       };
-      console.log(lines);
-
-      var gridEle = document.getElementById('grid');
-      for(var i=0;i<11;i++){
-        for(var j=0;j<15;j++){
-          var nodeEle = document.createElement("div");
-          nodeEle.style.width = '4px';
-          nodeEle.style.height = '4px';
-          // console.log("i is "+i+" j is "+j);
-          // console.log(lines[i][j]);
-          nodeEle.style.backgroundColor = lines[i][j].color;
-          gridEle.appendChild(nodeEle);
+      var canvas = document.getElementById('grid');
+      var ctx = canvas.getContext('2d');
+      // console.log(lines);
+      for(var i=0;i<nodePerColumn;i++){
+        for(var j=0;j<nodePerRow;j++){
+          var curNode = lines[i][j];
+          // console.log('i is '+i+' j is ' + j + ' cur x is '+curNode.x+' cur y is '+curNode.y+" color is "+curNode.color);
+          ctx.strokeStyle = 'black';
+          ctx.strokeRect(curNode.x, curNode.y,nodeWidth,nodeWidth);
+          ctx.fillStyle = curNode.color;
+          ctx.fillRect(curNode.x, curNode.y,nodeWidth,nodeWidth);
         }
       };
 
+
+
     </script>
-  </head>
-  <body>
-    <div id="game-board">
-      <div id="grid">
-      </div>
-    </div>
   </body>
 </html>

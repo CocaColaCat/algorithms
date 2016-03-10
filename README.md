@@ -23,3 +23,4 @@
 - KMP: gcc ./src/string/kmp.c -o ./bin/kmp && ./bin/kmp
 - edit distance: gcc ./src/dp/edit_distance.c -o ./bin/edit_distance && ./bin/edit_distance
 - longest increasing subsequence: gcc ./src/dp/longest_increasing_subsequence.c -o ./bin/longest_increasing_subsequence && ./bin/longest_increasing_subsequence
+- longest increasing subsequence in logn: gcc ./src/dp/lis_lgn.c -o ./bin/lis_lgn && ./bin/lis_lgn
