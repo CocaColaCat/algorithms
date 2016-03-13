@@ -25,11 +25,14 @@
   </head>
   <body>
     <div id="game-board">
-      <canvas id='grid' height="440px" width="600px" style="">
+      <canvas id='grid' height="440px" width="600px" style="" onclick="q()">
       </canvas>
     </div>
 
     <script type="text/javascript">
+      var lines, 
+          canvas,
+          ctx;
       var COLORS = ['red','yellow','blue','green','orange','pink'];
       var nodeWidth = 40;
       var nodePerRow = 15;
@@ -46,42 +49,70 @@
           this.color = color;
       };
 
-      var lines = new Array();
+      function initGrid(){
+        lines = new Array();
 
-      for(var i=0;i<nodePerColumn;i++){
-        lines[i] = new Array();
-        var x,y,left,right,up,down,isBlank,color;
-        for(var j=0;j<nodePerRow;j++){
-          x = j*nodeWidth;
-          y = i*nodeWidth;
-          if(i%2==0){
-            isBlank = true;
-            color = 'white';
-          }else{
-            isBlank = false;
-            var index = Math.round(Math.random()*(COLORS.length-1))
-            color = COLORS[index];
+        for(var i=0;i<nodePerColumn;i++){
+          lines[i] = new Array();
+          var x,y,left,right,up,down,isBlank,color;
+          for(var j=0;j<nodePerRow;j++){
+            x = j*nodeWidth;
+            y = i*nodeWidth;
+            if(i%2==0){
+              isBlank = true;
+              color = 'white';
+            }else{
+              isBlank = false;
+              var index = Math.round(Math.random()*(COLORS.length-1))
+              color = COLORS[index];
+            }
+            var node = new Node(x,y,isBlank,left,right,up,down,color);
+            lines[i].push(node);
           }
-          var node = new Node(x,y,isBlank,left,right,up,down,color);
-          lines[i].push(node);
+        };
+      }
+
+      function drawGrid(){
+        console.log('draw');
+        canvas = document.getElementById('grid');
+        ctx = canvas.getContext('2d');
+        for(var i=0;i<nodePerColumn;i++){
+          for(var j=0;j<nodePerRow;j++){
+            var curNode = lines[i][j];
+            // console.log('i is '+i+' j is ' + j + ' cur x is '+curNode.x+' cur y is '+curNode.y+" color is "+curNode.color);
+            ctx.strokeStyle = 'black';
+            ctx.strokeRect(curNode.x, curNode.y,nodeWidth,nodeWidth);
+            ctx.fillStyle = curNode.color;
+            ctx.fillRect(curNode.x, curNode.y,nodeWidth,nodeWidth);
+          }
+        };        
+      }
+
+
+      function q(event) {
+        event = event || window.event;
+        canvas = document.getElementById('grid'),
+            x = event.pageX - canvas.offsetLeft,
+            y = event.pageY - canvas.offsetTop;
+
+        var xIndex = parseInt(x/nodeWidth,10),
+            yIndex = parseInt(y/nodeWidth,10);
+        console.log(xIndex+" "+yIndex);
+        // var srcNode = lines[yIndex][xIndex];
+        lines[yIndex][xIndex].color = 'white';
+        // console.log("color is "+srcNode.color);        
+      }   
+
+      function main(){
+        initGrid();
+        var loop = function(){
+          drawGrid();
+          window.requestAnimationFrame(loop, canvas);
         }
-      };
-      var canvas = document.getElementById('grid');
-      var ctx = canvas.getContext('2d');
-      // console.log(lines);
-      for(var i=0;i<nodePerColumn;i++){
-        for(var j=0;j<nodePerRow;j++){
-          var curNode = lines[i][j];
-          // console.log('i is '+i+' j is ' + j + ' cur x is '+curNode.x+' cur y is '+curNode.y+" color is "+curNode.color);
-          ctx.strokeStyle = 'black';
-          ctx.strokeRect(curNode.x, curNode.y,nodeWidth,nodeWidth);
-          ctx.fillStyle = curNode.color;
-          ctx.fillRect(curNode.x, curNode.y,nodeWidth,nodeWidth);
-        }
-      };
+        window.requestAnimationFrame(loop, canvas);
+      }  
 
-
-
+      main();
     </script>
   </body>
 </html>
