@@ -37,8 +37,10 @@
       var nodeWidth = 40;
       var nodePerRow = 15;
       var nodePerColumn = 11;
+      var srcSet = false;
+      var descSet = false;
 
-      var Node = function (x,y,isBlank,left,right,up,down,color) {
+      var Node = function (x,y,isBlank,left,right,up,down,color,src,desc) {
           this.x = x;
           this.y = y;
           this.isBlank = isBlank;
@@ -47,6 +49,8 @@
           this.up = up;
           this.down = down;
           this.color = color;
+          this.src = src;
+          this.desc = desc;
       };
 
       function initGrid(){
@@ -66,24 +70,37 @@
               var index = Math.round(Math.random()*(COLORS.length-1))
               color = COLORS[index];
             }
-            var node = new Node(x,y,isBlank,left,right,up,down,color);
+            var node = new Node(x,y,isBlank,left,right,up,down,color,false,false);
             lines[i].push(node);
           }
         };
       }
 
       function drawGrid(){
-        console.log('draw');
+        // console.log('draw');
         canvas = document.getElementById('grid');
         ctx = canvas.getContext('2d');
         for(var i=0;i<nodePerColumn;i++){
           for(var j=0;j<nodePerRow;j++){
             var curNode = lines[i][j];
             // console.log('i is '+i+' j is ' + j + ' cur x is '+curNode.x+' cur y is '+curNode.y+" color is "+curNode.color);
-            ctx.strokeStyle = 'black';
-            ctx.strokeRect(curNode.x, curNode.y,nodeWidth,nodeWidth);
+            ctx.lineWidth=1;
             ctx.fillStyle = curNode.color;
             ctx.fillRect(curNode.x, curNode.y,nodeWidth,nodeWidth);
+
+            if(curNode.src){
+              ctx.lineWidth=4;
+              ctx.strokeStyle = 'black';
+              ctx.strokeRect(curNode.x, curNode.y,nodeWidth-2,nodeWidth-2);
+            }else if(curNode.desc){
+              ctx.lineWidth=4;
+              ctx.strokeStyle = 'brown';
+              ctx.strokeRect(curNode.x, curNode.y,nodeWidth-2,nodeWidth-2);
+            }else{
+              ctx.strokeStyle = 'grey';
+              ctx.strokeRect(curNode.x, curNode.y,nodeWidth,nodeWidth);
+            }
+
           }
         };        
       }
@@ -98,9 +115,15 @@
         var xIndex = parseInt(x/nodeWidth,10),
             yIndex = parseInt(y/nodeWidth,10);
         console.log(xIndex+" "+yIndex);
-        // var srcNode = lines[yIndex][xIndex];
-        lines[yIndex][xIndex].color = 'white';
-        // console.log("color is "+srcNode.color);        
+        var srcNode = lines[yIndex][xIndex];
+
+        if(!srcSet){
+          srcNode.src = true;
+          srcSet = true;
+        }else if(srcSet && !descSet){
+          srcNode.desc = true;
+          descSet = true;
+        }
       }   
 
       function main(){
