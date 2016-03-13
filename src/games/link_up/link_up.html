@@ -39,6 +39,8 @@
       var nodePerColumn = 11;
       var srcSet = false;
       var descSet = false;
+      var srcNode, descNode;
+      var show=true;
 
       var Node = function (x,y,isBlank,left,right,up,down,color,src,desc) {
           this.x = x;
@@ -73,17 +75,70 @@
             var node = new Node(x,y,isBlank,left,right,up,down,color,false,false);
             lines[i].push(node);
           }
-        };
+        }
+      }
+
+      function setAdjs(node,y,x){
+        var upNode, downNode, leftNode, rightNode;
+        if(y>=1){
+          upNode = lines[y-1][x];
+        }
+        if(y<nodePerColumn-1){
+          downNode = lines[y+1][x];
+        }
+        if(x>=1){
+          leftNode = lines[y][x-1];
+        }
+        if(x<nodePerRow-1){
+          rightNode = lines[y][x+1];
+        }
+
+        if(upNode != undefined && upNode.isBlank){
+          node.up = upNode;
+        }
+        if(downNode != undefined && downNode.isBlank){
+          node.down = downNode;
+        }
+        if(leftNode != undefined && leftNode.isBlank){
+          node.left = leftNode;
+        }
+        if(rightNode != undefined && rightNode.isBlank){
+          node.right = rightNode;
+        }
+      }
+
+      function getAdjs(node){
+        var adjs = new Array();
+        if(node.up){
+          adjs.push(node.up);
+        }
+        if(node.down){
+          adjs.push(node.down);
+        }
+        if(node.left){
+          adjs.push(node.left);
+        }
+        if(node.right){
+          adjs.push(node.right);
+        }
+        return adjs;
       }
 
       function drawGrid(){
-        // console.log('draw');
         canvas = document.getElementById('grid');
         ctx = canvas.getContext('2d');
         for(var i=0;i<nodePerColumn;i++){
           for(var j=0;j<nodePerRow;j++){
             var curNode = lines[i][j];
             // console.log('i is '+i+' j is ' + j + ' cur x is '+curNode.x+' cur y is '+curNode.y+" color is "+curNode.color);
+            setAdjs(curNode,i,j);
+            // if(show && (i==2&&j==1)){
+            //   console.log(curNode);
+            //   console.log(getAdjs(curNode));
+            //   show=false;
+            // }
+            // 
+
             ctx.lineWidth=1;
             ctx.fillStyle = curNode.color;
             ctx.fillRect(curNode.x, curNode.y,nodeWidth,nodeWidth);
@@ -100,11 +155,17 @@
               ctx.strokeStyle = 'grey';
               ctx.strokeRect(curNode.x, curNode.y,nodeWidth,nodeWidth);
             }
-
           }
         };        
       }
 
+      function isMatch(){
+        if(srcNode.color == descNode.color){
+
+        }else{
+          return false;
+        }
+      }
 
       function q(event) {
         event = event || window.event;
@@ -114,15 +175,29 @@
 
         var xIndex = parseInt(x/nodeWidth,10),
             yIndex = parseInt(y/nodeWidth,10);
-        console.log(xIndex+" "+yIndex);
-        var srcNode = lines[yIndex][xIndex];
+        var clicked = lines[yIndex][xIndex];
 
         if(!srcSet){
-          srcNode.src = true;
+          clicked.src = true;
           srcSet = true;
+          console.log(clicked);
+          srcNode = clicked;
         }else if(srcSet && !descSet){
-          srcNode.desc = true;
+          clicked.desc = true;
+          console.log(clicked);
           descSet = true;
+          descNode = clicked;
+        }
+
+        if(srcSet && descSet){
+          if(isMatch()){
+            console.log('allowed');
+            srcNode.color = descNode.color = 'white';
+            srcNode.isBlank = descNode.isBlank = true;
+          }else{
+            console.log('banned');
+          }
+          srcNode.src = descNode.desc = srcSet = descSet = false;
         }
       }   
 
@@ -133,7 +208,7 @@
           window.requestAnimationFrame(loop, canvas);
         }
         window.requestAnimationFrame(loop, canvas);
-      }  
+      }
 
       main();
     </script>
