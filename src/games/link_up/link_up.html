@@ -41,7 +41,7 @@
       var descSet = false;
       var srcNode, descNode;
       var show=true;
-      var queue = new buckets.Queue();
+      var queue;
       var found = false;
 
       var Node = function (x,y,isBlank,left,right,up,down,color,src,desc) {
@@ -179,7 +179,8 @@
           return;
         }
         if(queue.isEmpty()){
-          console.log("---- transver done ----")
+          console.log("---- transver done ----");
+          return;
         }else{
           var top = queue.dequeue();
           console.log("top node is");
@@ -197,7 +198,7 @@
               found = true;
               return;
             }
-            if(!visit[nextIndex]){
+            if(!visit[nextIndex] && next.isBlank){
               queue.add(next);
             }
           }
@@ -210,9 +211,9 @@
         found = false;
         var visit = new Array();
         var pathTo = new Array();
+        queue = new buckets.Queue();
         queue.add(srcNode);
         bfs(queue,visit,pathTo);
-        // return found;
       }
 
       function isMatch(){
