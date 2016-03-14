@@ -40,8 +40,8 @@
       var srcSet = false;
       var descSet = false;
       var srcNode, descNode;
-      var show=true;
-      var queue;
+      var show = true;
+      var queue, visit, pathTo;
       var found = false;
 
       var Node = function (x,y,isBlank,left,right,up,down,color,src,desc) {
@@ -173,6 +173,13 @@
         return (node.x/nodeWidth+node.y/nodeWidth*nodePerRow);
       }
 
+      function decodeToNode(code){
+        var y = parseInt(code/nodePerRow, 10);
+        var x = (code%nodePerRow);
+        console.log("x is "+x+" y is "+y);
+        return lines[x][y];
+      }
+
       function bfs(queue,visit,pathTo){
         console.log(found);
         if(found){
@@ -209,8 +216,8 @@
 
       function hasPathTo(){
         found = false;
-        var visit = new Array();
-        var pathTo = new Array();
+        visit = new Array();
+        pathTo = new Array();
         queue = new buckets.Queue();
         queue.add(srcNode);
         bfs(queue,visit,pathTo);
@@ -219,6 +226,9 @@
       function isMatch(){
         if((srcNode.color == descNode.color)){
           hasPathTo();
+          if(found){
+            drawQueue();
+          }
           return found;
         }else{
           return false;
@@ -260,14 +270,26 @@
       }   
 
       function drawQueue(){
-        // var print = function(node){
-        //   ctx.lineWidth=1;
-        //   ctx.fillStyle = 'orange';
-        //   ctx.fillRect(node.x, node.y,nodeWidth,nodeWidth);
-        // }
-        // if(!queue.isEmpty()){
-        //   queue.forEach(print);
-        // }
+        var stack = buckets.Stack();
+        stack.add(descNode);
+        var descCode = encodeToIndex(descNode);
+        while(pathTo[descCode]){
+          // console.log("code is "+descCode);
+          // console.lo
+          var node = decodeToNode(pathTo[descCode]);
+          stack.add(node);
+          descCode = pathTo[encodeToIndex(node)];
+        }
+        stack.add(srcNode);
+        console.log(stack.toArray());
+        while(!stack.isEmpty()){
+          console.log("draw");
+          var node = stack.pop();
+          node.color="grey";
+          // ctx.lineWidth= 1;
+          // ctx.fillStyle = "grey";
+          // ctx.fillRect(node.x, node.y,nodeWidth,nodeWidth); 
+        }
       }
 
       function main(){
