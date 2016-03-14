@@ -14,7 +14,6 @@
         background-color: white;
         border: solid 1px black;
         background-color: brown;
-        /*position: relative;  */
       }
       #grid{
         background-color: grey;
@@ -22,6 +21,7 @@
       }
 
     </style>
+    <script src="buckets.min.js"></script>
   </head>
   <body>
     <div id="game-board">
@@ -41,6 +41,8 @@
       var descSet = false;
       var srcNode, descNode;
       var show=true;
+      var queue = new buckets.Queue();
+      var found = false;
 
       var Node = function (x,y,isBlank,left,right,up,down,color,src,desc) {
           this.x = x;
@@ -93,17 +95,25 @@
           rightNode = lines[y][x+1];
         }
 
-        if(upNode != undefined && upNode.isBlank){
-          node.up = upNode;
+        if(upNode != undefined){
+          if(node.isBlank || (!node.isBlank && upNode.isBlank)){
+            node.up = upNode;
+          }
         }
-        if(downNode != undefined && downNode.isBlank){
-          node.down = downNode;
+        if(downNode != undefined){
+          if(node.isBlank || (!node.isBlank && downNode.isBlank)){
+            node.down = downNode;
+          }
         }
-        if(leftNode != undefined && leftNode.isBlank){
-          node.left = leftNode;
+        if(leftNode != undefined){
+          if(node.isBlank || (!node.isBlank && leftNode.isBlank)){
+            node.left = leftNode;
+          }
         }
-        if(rightNode != undefined && rightNode.isBlank){
-          node.right = rightNode;
+        if(rightNode != undefined){
+          if(node.isBlank || (!node.isBlank && rightNode.isBlank)){
+            node.right = rightNode;
+          }
         }
       }
 
@@ -130,15 +140,9 @@
         for(var i=0;i<nodePerColumn;i++){
           for(var j=0;j<nodePerRow;j++){
             var curNode = lines[i][j];
-            // console.log('i is '+i+' j is ' + j + ' cur x is '+curNode.x+' cur y is '+curNode.y+" color is "+curNode.color);
-            setAdjs(curNode,i,j);
-            // if(show && (i==2&&j==1)){
-            //   console.log(curNode);
-            //   console.log(getAdjs(curNode));
-            //   show=false;
-            // }
-            // 
 
+            setAdjs(curNode,i,j);
+            
             ctx.lineWidth=1;
             ctx.fillStyle = curNode.color;
             ctx.fillRect(curNode.x, curNode.y,nodeWidth,nodeWidth);
@@ -155,13 +159,66 @@
               ctx.strokeStyle = 'grey';
               ctx.strokeRect(curNode.x, curNode.y,nodeWidth,nodeWidth);
             }
+
+            ctx.font="8px";
+            ctx.fillStyle = "black";
+            ctx.textAlign = "center";
+            ctx.fillText(curNode.x+"-"+curNode.y, curNode.x+20, curNode.y+30);
           }
-        };        
+        }; 
+        show=false;       
+      }
+
+      function encodeToIndex(node){
+        return (node.x/nodeWidth+node.y/nodeWidth*nodePerRow);
+      }
+
+      function bfs(queue,visit,pathTo){
+        console.log(found);
+        if(found){
+          return;
+        }
+        if(queue.isEmpty()){
+          console.log("---- transver done ----")
+        }else{
+          var top = queue.dequeue();
+          console.log("top node is");
+          console.log(top);
+          var topIndex = encodeToIndex(top)
+          visit[topIndex] = true;
+          console.log(visit);
+          var adjs = getAdjs(top);
+
+          for(var i=0;i<adjs.length;i++){
+            var next = adjs[i];
+            var nextIndex = encodeToIndex(next)
+            pathTo[nextIndex] = topIndex;
+            if(nextIndex == encodeToIndex(descNode)){
+              found = true;
+              return;
+            }
+            if(!visit[nextIndex]){
+              queue.add(next);
+            }
+          }
+
+        }
+        bfs(queue,visit,pathTo);
+      }
+
+      function hasPathTo(){
+        found = false;
+        var visit = new Array();
+        var pathTo = new Array();
+        queue.add(srcNode);
+        bfs(queue,visit,pathTo);
+        // return found;
       }
 
       function isMatch(){
-        if(srcNode.color == descNode.color){
-
+        if((srcNode.color == descNode.color)){
+          hasPathTo();
+          return found;
         }else{
           return false;
         }
@@ -180,11 +237,11 @@
         if(!srcSet){
           clicked.src = true;
           srcSet = true;
-          console.log(clicked);
+          // console.log(clicked);
           srcNode = clicked;
         }else if(srcSet && !descSet){
           clicked.desc = true;
-          console.log(clicked);
+          // console.log(clicked);
           descSet = true;
           descNode = clicked;
         }
@@ -201,10 +258,22 @@
         }
       }   
 
+      function drawQueue(){
+        // var print = function(node){
+        //   ctx.lineWidth=1;
+        //   ctx.fillStyle = 'orange';
+        //   ctx.fillRect(node.x, node.y,nodeWidth,nodeWidth);
+        // }
+        // if(!queue.isEmpty()){
+        //   queue.forEach(print);
+        // }
+      }
+
       function main(){
         initGrid();
         var loop = function(){
           drawGrid();
+          // drawQueue();
           window.requestAnimationFrame(loop, canvas);
         }
         window.requestAnimationFrame(loop, canvas);
