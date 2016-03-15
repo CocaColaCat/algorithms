@@ -17,7 +17,7 @@
       }
       #grid{
         background-color: grey;
-        margin: 50px 50px auto 50px;   
+        margin: 50px 50px auto 50px;
       }
 
     </style>
@@ -30,7 +30,7 @@
     </div>
 
     <script type="text/javascript">
-      var lines, 
+      var lines,
           canvas,
           ctx;
       var COLORS = ['red','yellow','blue','green','orange','pink'];
@@ -142,7 +142,7 @@
             var curNode = lines[i][j];
 
             setAdjs(curNode,i,j);
-            
+
             ctx.lineWidth=1;
             ctx.fillStyle = curNode.color;
             ctx.fillRect(curNode.x, curNode.y,nodeWidth,nodeWidth);
@@ -165,8 +165,8 @@
             ctx.textAlign = "center";
             ctx.fillText(curNode.x+"-"+curNode.y, curNode.x+20, curNode.y+30);
           }
-        }; 
-        show=false;       
+        };
+        show=false;
       }
 
       function encodeToIndex(node){
@@ -194,7 +194,7 @@
           console.log(top);
           var topIndex = encodeToIndex(top)
           visit[topIndex] = true;
-          console.log(visit);
+          // console.log(visit);
           var adjs = getAdjs(top);
 
           for(var i=0;i<adjs.length;i++){
@@ -267,7 +267,7 @@
           }
           srcNode.src = descNode.desc = srcSet = descSet = false;
         }
-      }   
+      }
 
       function drawQueue(){
         var stack = buckets.Stack();
@@ -276,19 +276,21 @@
         while(pathTo[descCode]){
           // console.log("code is "+descCode);
           // console.lo
-          var node = decodeToNode(pathTo[descCode]);
+          var srcCode = pathTo[descCode];
+          var node = decodeToNode(srcCode);
           stack.add(node);
-          descCode = pathTo[encodeToIndex(node)];
+          descCode = srcCode;
         }
         stack.add(srcNode);
-        console.log(stack.toArray());
+        // console.log(stack.toArray());
         while(!stack.isEmpty()){
-          console.log("draw");
+          // console.log("draw");
           var node = stack.pop();
-          node.color="grey";
+          console.log(node.x+" "+node.y);
+          // node.color="grey";
           // ctx.lineWidth= 1;
           // ctx.fillStyle = "grey";
-          // ctx.fillRect(node.x, node.y,nodeWidth,nodeWidth); 
+          // ctx.fillRect(node.x, node.y,nodeWidth,nodeWidth);
         }
       }
 
