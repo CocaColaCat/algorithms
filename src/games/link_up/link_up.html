@@ -160,10 +160,11 @@
               ctx.strokeRect(curNode.x, curNode.y,nodeWidth,nodeWidth);
             }
 
-            ctx.font="8px";
+            ctx.font="6px";
             ctx.fillStyle = "black";
             ctx.textAlign = "center";
             ctx.fillText(curNode.x+"-"+curNode.y, curNode.x+20, curNode.y+30);
+            ctx.fillText(encodeToIndex(curNode), curNode.x+20, curNode.y+20);
           }
         }; 
         show=false;       
@@ -176,12 +177,10 @@
       function decodeToNode(code){
         var y = parseInt(code/nodePerRow, 10);
         var x = (code%nodePerRow);
-        console.log("x is "+x+" y is "+y);
-        return lines[x][y];
+        return lines[y][x];
       }
 
       function bfs(queue,visit,pathTo){
-        console.log(found);
         if(found){
           return;
         }
@@ -190,17 +189,16 @@
           return;
         }else{
           var top = queue.dequeue();
-          console.log("top node is");
-          console.log(top);
           var topIndex = encodeToIndex(top)
           visit[topIndex] = true;
-          console.log(visit);
           var adjs = getAdjs(top);
-
           for(var i=0;i<adjs.length;i++){
             var next = adjs[i];
-            var nextIndex = encodeToIndex(next)
-            pathTo[nextIndex] = topIndex;
+            
+            var nextIndex = encodeToIndex(next);
+            if(!pathTo[nextIndex]){
+              pathTo[nextIndex] = topIndex;
+            }
             if(nextIndex == encodeToIndex(descNode)){
               found = true;
               return;
@@ -248,11 +246,9 @@
         if(!srcSet){
           clicked.src = true;
           srcSet = true;
-          // console.log(clicked);
           srcNode = clicked;
         }else if(srcSet && !descSet){
           clicked.desc = true;
-          // console.log(clicked);
           descSet = true;
           descNode = clicked;
         }
@@ -273,22 +269,20 @@
         var stack = buckets.Stack();
         stack.add(descNode);
         var descCode = encodeToIndex(descNode);
-        while(pathTo[descCode]){
-          // console.log("code is "+descCode);
-          // console.lo
-          var node = decodeToNode(pathTo[descCode]);
+
+        while(pathTo[descCode]&&pathTo[descCode]!==encodeToIndex(srcNode)){
+          var srcCode = pathTo[descCode];
+          var node = decodeToNode(srcCode);
           stack.add(node);
-          descCode = pathTo[encodeToIndex(node)];
+          descCode = srcCode;
         }
         stack.add(srcNode);
-        console.log(stack.toArray());
         while(!stack.isEmpty()){
-          console.log("draw");
           var node = stack.pop();
           node.color="grey";
-          // ctx.lineWidth= 1;
-          // ctx.fillStyle = "grey";
-          // ctx.fillRect(node.x, node.y,nodeWidth,nodeWidth); 
+          ctx.lineWidth= 1;
+          ctx.fillStyle = "grey";
+          ctx.fillRect(node.x, node.y,nodeWidth,nodeWidth); 
         }
       }
 
@@ -296,7 +290,6 @@
         initGrid();
         var loop = function(){
           drawGrid();
-          // drawQueue();
           window.requestAnimationFrame(loop, canvas);
         }
         window.requestAnimationFrame(loop, canvas);
