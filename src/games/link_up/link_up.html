@@ -41,7 +41,7 @@
       var descSet = false;
       var srcNode, descNode;
       var show = true;
-      var queue, visit, pathTo;
+      var queue, visit, pathTo, crossCount, pointTo;
       var found = false;
 
       var Node = function (x,y,isBlank,left,right,up,down,color,src,desc) {
@@ -180,7 +180,41 @@
         return lines[y][x];
       }
 
-      function bfs(queue,visit,pathTo){
+      function setCrossCount(next,top){
+        var direction;
+        switch(next){
+          case top.up:
+            direction = "up";
+            break;
+          case top.down:
+            direction = "down";
+            break;
+          case top.left:
+            direction = "left";
+            break;
+          case top.right:
+            direction = "right";
+            break;
+          default:
+            console.log("exception");
+        }
+        var nextCode = encodeToIndex(next);
+        var topCode = encodeToIndex(top);
+        pointTo[nextCode] = direction;
+        console.log(crossCount);
+        if(topCode==encodeToIndex(srcNode)){
+          crossCount[nextCode] = 0;
+        }else{
+          if((crossCount[nextCode]=="undefined") && (pointTo[topCode] !== direction)){
+            console.log("cross count plus 1");
+            console.log("next is "+nextCode+" top is "+topCode);
+            console.log("top cross count is "+crossCount[topCode]);
+            crossCount[nextCode] = crossCount[topCode]+1;
+          }
+        }
+      }
+
+      function bfs(queue,visit,pathTo,crossCount){
         if(found){
           return;
         }
@@ -194,10 +228,10 @@
           var adjs = getAdjs(top);
           for(var i=0;i<adjs.length;i++){
             var next = adjs[i];
-            
             var nextIndex = encodeToIndex(next);
             if(!pathTo[nextIndex]){
               pathTo[nextIndex] = topIndex;
+              setCrossCount(next, top);
             }
             if(nextIndex == encodeToIndex(descNode)){
               found = true;
@@ -207,7 +241,6 @@
               queue.add(next);
             }
           }
-
         }
         bfs(queue,visit,pathTo);
       }
@@ -216,15 +249,21 @@
         found = false;
         visit = new Array();
         pathTo = new Array();
+        crossCount = new Array();
+        pointTo = new Array();
         queue = new buckets.Queue();
+        crossCount[encodeToIndex(srcNode)] = 0;
+        console.log("before calculate");
+        console.log(crossCount);
         queue.add(srcNode);
-        bfs(queue,visit,pathTo);
+        bfs(queue,visit,pathTo,crossCount);
       }
 
       function isMatch(){
         if((srcNode.color == descNode.color)){
           hasPathTo();
           if(found){
+            console.log(crossCount);
             drawQueue();
           }
           return found;
