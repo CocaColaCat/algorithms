@@ -17,7 +17,7 @@
       }
       #grid{
         background-color: grey;
-        margin: 50px 50px auto 50px;   
+        margin: 50px 50px auto 50px;
       }
 
     </style>
@@ -30,7 +30,7 @@
     </div>
 
     <script type="text/javascript">
-      var lines, 
+      var lines,
           canvas,
           ctx;
       var COLORS = ['red','yellow','blue','green','orange','pink'];
@@ -142,7 +142,7 @@
             var curNode = lines[i][j];
 
             setAdjs(curNode,i,j);
-            
+
             ctx.lineWidth=1;
             ctx.fillStyle = curNode.color;
             ctx.fillRect(curNode.x, curNode.y,nodeWidth,nodeWidth);
@@ -166,8 +166,8 @@
             ctx.fillText(curNode.x+"-"+curNode.y, curNode.x+20, curNode.y+30);
             ctx.fillText(encodeToIndex(curNode), curNode.x+20, curNode.y+20);
           }
-        }; 
-        show=false;       
+        };
+        show=false;
       }
 
       function encodeToIndex(node){
@@ -263,13 +263,12 @@
           }
           srcNode.src = descNode.desc = srcSet = descSet = false;
         }
-      }   
+      }
 
       function drawQueue(){
         var stack = buckets.Stack();
         stack.add(descNode);
         var descCode = encodeToIndex(descNode);
-
         while(pathTo[descCode]&&pathTo[descCode]!==encodeToIndex(srcNode)){
           var srcCode = pathTo[descCode];
           var node = decodeToNode(srcCode);
