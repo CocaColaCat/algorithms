@@ -201,15 +201,11 @@
         var nextCode = encodeToIndex(next);
         var topCode = encodeToIndex(top);
         pointTo[nextCode] = direction;
-        console.log("direction " + direction);
         if(topCode==encodeToIndex(srcNode)){
           crossCount[nextCode] = 0;
         }else{
           if(crossCount[nextCode]===undefined){
             if(pointTo[topCode] !== direction){
-              console.log("cross count plus 1");
-              console.log("next is "+nextCode+" top is "+topCode);
-              console.log("top cross count is "+crossCount[topCode]);
               crossCount[nextCode] = crossCount[topCode]+1;
             }else{
               crossCount[nextCode] = crossCount[topCode];
@@ -218,7 +214,7 @@
         }
       }
 
-      function bfs(queue,visit,pathTo,crossCount){
+      function bfs(queue,visit,pathTo){
         if(found){
           return;
         }
@@ -238,7 +234,11 @@
               setCrossCount(next, top);
             }
             if(nextIndex == encodeToIndex(descNode)){
-              found = true;
+              if((crossCount[nextIndex]>3)){
+                console.log("too much cross "+ crossCount[nextIndex]);
+              }else{
+                found = true;
+              }
               return;
             }
             if(!visit[nextIndex] && next.isBlank){
@@ -257,16 +257,15 @@
         pointTo = new Array();
         queue = new buckets.Queue();
         crossCount[encodeToIndex(srcNode)] = 0;
-        console.log("before calculate");
-        // console.log(crossCount[encodeToIndex(srcNode)]);
         queue.add(srcNode);
-        bfs(queue,visit,pathTo,crossCount);
+        bfs(queue,visit,pathTo);
       }
 
       function isMatch(){
         if((srcNode.color == descNode.color)){
           hasPathTo();
           if(found){
+            console.log("crossCount");
             console.log(crossCount);
             drawQueue();
           }
