@@ -17,14 +17,18 @@
       }
       #grid{
         background-color: grey;
-        margin: 50px 50px auto 50px;
+        margin: 10px 50px auto 50px;
       }
-
+      #score{
+        margin: 10px 50px auto 50px;
+        background-color: beige;
+      }
     </style>
     <script src="buckets.min.js"></script>
   </head>
   <body>
     <div id="game-board">
+      <canvas id="score" height="100px" width="600px"></canvas>
       <canvas id='grid' height="440px" width="600px" style="" onclick="q()">
       </canvas>
     </div>
@@ -32,7 +36,9 @@
     <script type="text/javascript">
       var lines,
           canvas,
-          ctx;
+          ctx,
+          scoreCanvas,
+          ctxScore;
       var COLORS = ['red','yellow','blue','green','orange','pink'];
       var nodeWidth = 40;
       var nodePerRow = 15;
@@ -43,6 +49,7 @@
       var show = true;
       var queue, visit, pathTo, crossCount, pointTo;
       var found = false;
+      var score = 0;
 
       var Node = function (x,y,isBlank,left,right,up,down,color,src,desc) {
           this.x = x;
@@ -135,6 +142,12 @@
       }
 
       function drawGrid(){
+        scoreCanvas = document.getElementById('score');
+        ctxScore = scoreCanvas.getContext('2d');
+        ctxScore.clearRect(0, 0, scoreCanvas.width, scoreCanvas.height);
+        ctxScore.font = "30px Arial";
+        ctxScore.fillText("Your Score: "+score,10,50);
+
         canvas = document.getElementById('grid');
         ctx = canvas.getContext('2d');
         for(var i=0;i<nodePerColumn;i++){
@@ -167,7 +180,6 @@
             ctx.fillText(encodeToIndex(curNode), curNode.x+20, curNode.y+20);
           }
         };
-        show=false;
       }
 
       function encodeToIndex(node){
@@ -265,8 +277,6 @@
         if((srcNode.color == descNode.color)){
           hasPathTo();
           if(found){
-            console.log("crossCount");
-            console.log(crossCount);
             drawQueue();
           }
           return found;
@@ -297,9 +307,10 @@
 
         if(srcSet && descSet){
           if(isMatch()){
-            console.log('allowed');
             srcNode.color = descNode.color = 'white';
             srcNode.isBlank = descNode.isBlank = true;
+            score = score+1;
+            console.log("score is "+ score);
           }else{
             console.log('banned');
           }
