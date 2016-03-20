@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>link up V0.1</title>
+    <style type="text/css">
+      body{
+        background-color: beige;
+      }
+
+      #game-board{
+        margin: 20px auto auto auto;
+        width: 700px;
+        height: 700px;
+        background-color: white;
+        border: solid 1px black;
+        background-color: brown;
+      }
+
+      #grid{
+        background-color: grey;
+        margin: 10px 50px auto 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="game-board">
+      <canvas id='grid' height="440px" width="600px" style="">
+      </canvas>
+    </div>
+    <script type="text/javascript">
+      var lines,
+          canvas,
+          ctx,
+          nodeWidth,
+          nodePerRow,
+          nodePerColumn;
+      nodeWidth = 40;
+      nodePerRow = 15;
+      nodePerColumn = 11;
+      var COLORS = ['red','yellow','blue','green','orange','pink'];
+
+      var Node = function (x,y,isBlank,left,right,up,down,color,src,desc) {
+        this.x = x;
+        this.y = y;
+        this.isBlank = isBlank;
+        this.left = left;
+        this.right = right;
+        this.up = up;
+        this.down = down;
+        this.color = color;
+        this.src = src;
+        this.desc = desc;
+      };
+
+      function initGrid(){
+        lines = new Array();
+        for(var i=0;i<nodePerColumn;i++){
+          lines[i] = new Array();
+          var x,y,left,right,up,down,isBlank,color;
+          for(var j=0;j<nodePerRow;j++){
+            x = j*nodeWidth;
+            y = i*nodeWidth;
+            if(i%2==0){
+              isBlank = true;
+              color = 'white';
+            }else{
+              isBlank = false;
+              var index = Math.round(Math.random()*(COLORS.length-1))
+              color = COLORS[index];
+            }
+            var node = new Node(x,y,isBlank,left,right,up,down,color,false,false);
+            lines[i].push(node);
+          }
+        }
+      } 
+
+      function drawGrid(){
+        canvas = document.getElementById('grid');
+        ctx = canvas.getContext('2d');
+        for(var i=0;i<nodePerColumn;i++){
+          for(var j=0;j<nodePerRow;j++){
+            var curNode = lines[i][j];
+            ctx.lineWidth=1;
+            ctx.fillStyle = curNode.color;
+            ctx.fillRect(curNode.x, curNode.y,nodeWidth,nodeWidth);
+            ctx.strokeStyle = 'grey';
+            ctx.strokeRect(curNode.x, curNode.y,nodeWidth,nodeWidth);
+          }
+        };
+      }
+
+      function main(){
+        initGrid();
+        drawGrid();
+      }
+
+      main();     
+    </script>
+  </body>
+</html>
