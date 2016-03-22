@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>link up V0.1</title>
+    <style type="text/css">
+      body{
+        background-color: beige;
+      }
+
+      #game-board{
+        margin: 20px auto auto auto;
+        width: 700px;
+        height: 700px;
+        background-color: white;
+        border: solid 1px black;
+        background-color: brown;
+      }
+
+      #grid{
+        background-color: grey;
+        margin: 10px 50px auto 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="game-board">
+      <canvas id='grid' height="440px" width="600px" onclick="q()">
+      </canvas>
+    </div>
+    <script type="text/javascript">
+      var lines,
+          canvas,
+          ctx,
+          nodeWidth,
+          nodePerRow,
+          nodePerColumn;
+      nodeWidth = 40;
+      nodePerRow = 15;
+      nodePerColumn = 11;
+      var srcNode, descNode;
+      var srcSet = descSet = false;
+      var COLORS = ['red','yellow','blue','green','orange','pink'];
+
+      var Node = function (x,y,isBlank,left,right,up,down,color,src,desc) {
+        this.x = x;
+        this.y = y;
+        this.isBlank = isBlank;
+        this.left = left;
+        this.right = right;
+        this.up = up;
+        this.down = down;
+        this.color = color;
+        this.src = src;
+        this.desc = desc;
+      };
+
+      function initGrid(){
+        lines = new Array();
+        for(var i=0;i<nodePerColumn;i++){
+          lines[i] = new Array();
+          var x,y,left,right,up,down,isBlank,color;
+          for(var j=0;j<nodePerRow;j++){
+            x = j*nodeWidth;
+            y = i*nodeWidth;
+            if(i%2==0){
+              isBlank = true;
+              color = 'white';
+            }else{
+              isBlank = false;
+              var index = Math.round(Math.random()*(COLORS.length-1))
+              color = COLORS[index];
+            }
+            var node = new Node(x,y,isBlank,left,right,up,down,color,false,false);
+            lines[i].push(node);
+          }
+        }
+      } 
+
+      function drawGrid(){
+        canvas = document.getElementById('grid');
+        ctx = canvas.getContext('2d');
+        for(var i=0;i<nodePerColumn;i++){
+          for(var j=0;j<nodePerRow;j++){
+            var curNode = lines[i][j];
+            ctx.lineWidth=1;
+            ctx.fillStyle = curNode.color;
+            ctx.fillRect(curNode.x, curNode.y,nodeWidth,nodeWidth);
+
+            if(curNode.src){
+              ctx.lineWidth=4;
+              ctx.strokeStyle = 'black';
+              ctx.strokeRect(curNode.x, curNode.y,nodeWidth-2,nodeWidth-2);
+            }else if(curNode.desc){
+              ctx.lineWidth=4;
+              ctx.strokeStyle = 'brown';
+              ctx.strokeRect(curNode.x, curNode.y,nodeWidth-2,nodeWidth-2);
+            }else{
+              ctx.strokeStyle = 'grey';
+              ctx.strokeRect(curNode.x, curNode.y,nodeWidth,nodeWidth);
+            }
+          }
+        };
+      }
+
+      function q(event) {
+        event = event || window.event;
+        canvas = document.getElementById('grid'),
+            x = event.pageX - canvas.offsetLeft,
+            y = event.pageY - canvas.offsetTop;
+
+        var xIndex = parseInt(x/nodeWidth,10),
+            yIndex = parseInt(y/nodeWidth,10);
+        var clicked = lines[yIndex][xIndex];
+
+        if(!srcSet){
+          clicked.src = true;
+          srcSet = true;
+          srcNode = clicked;
+        }else if(srcSet && !descSet){
+          clicked.desc = true;
+          descSet = true;
+          descNode = clicked;
+        }
+      }
+
+      function main(){
+        initGrid();
+        var loop = function(){
+          drawGrid();
+          window.requestAnimationFrame(loop, canvas);
+        }
+        window.requestAnimationFrame(loop, canvas);
+      }
+
+      main();     
+    </script>
+  </body>
+</html>
