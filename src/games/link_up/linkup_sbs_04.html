@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>link up V0.1</title>
+    <style type="text/css">
+      body{
+        background-color: beige;
+      }
+
+      #game-board{
+        margin: 20px auto auto auto;
+        width: 700px;
+        height: 700px;
+        background-color: white;
+        border: solid 1px black;
+        background-color: brown;
+      }
+
+      #grid{
+        background-color: grey;
+        margin: 10px 50px auto 50px;
+      }
+    </style>
+    <script src="buckets.min.js"></script>
+  </head>
+  <body>
+    <div id="game-board">
+      <canvas id='grid' height="440px" width="600px" onclick="q()">
+      </canvas>
+    </div>
+    <script type="text/javascript">
+      var lines,
+          canvas,
+          ctx,
+          nodeWidth,
+          nodePerRow,
+          nodePerColumn;
+      nodeWidth = 40;
+      nodePerRow = 15;
+      nodePerColumn = 11;
+      var srcNode, descNode;
+      var srcSet = descSet = false;
+      var queue, visit, pathTo, crossCount, pointTo;
+      var found = false;
+      var COLORS = ['red','yellow','blue','green','orange','pink'];
+
+      var Node = function (x,y,isBlank,left,right,up,down,color,src,desc) {
+        this.x = x;
+        this.y = y;
+        this.isBlank = isBlank;
+        this.left = left;
+        this.right = right;
+        this.up = up;
+        this.down = down;
+        this.color = color;
+        this.src = src;
+        this.desc = desc;
+      };
+
+      function initGrid(){
+        lines = new Array();
+        for(var i=0;i<nodePerColumn;i++){
+          lines[i] = new Array();
+          var x,y,left,right,up,down,isBlank,color;
+          for(var j=0;j<nodePerRow;j++){
+            x = j*nodeWidth;
+            y = i*nodeWidth;
+            if(i%2==0){
+              isBlank = true;
+              color = 'white';
+            }else{
+              isBlank = false;
+              var index = Math.round(Math.random()*(COLORS.length-1))
+              color = COLORS[index];
+            }
+            var node = new Node(x,y,isBlank,left,right,up,down,color,false,false);
+            lines[i].push(node);
+          }
+        }
+      } 
+
+      function drawGrid(){
+        canvas = document.getElementById('grid');
+        ctx = canvas.getContext('2d');
+        for(var i=0;i<nodePerColumn;i++){
+          for(var j=0;j<nodePerRow;j++){
+            var curNode = lines[i][j];
+            
+            setAdjs(curNode,i,j);
+
+            ctx.lineWidth=1;
+            ctx.fillStyle = curNode.color;
+            ctx.fillRect(curNode.x, curNode.y,nodeWidth,nodeWidth);
+
+            if(curNode.src){
+              ctx.lineWidth=4;
+              ctx.strokeStyle = 'black';
+              ctx.strokeRect(curNode.x, curNode.y,nodeWidth-2,nodeWidth-2);
+            }else if(curNode.desc){
+              ctx.lineWidth=4;
+              ctx.strokeStyle = 'brown';
+              ctx.strokeRect(curNode.x, curNode.y,nodeWidth-2,nodeWidth-2);
+            }else{
+              ctx.strokeStyle = 'grey';
+              ctx.strokeRect(curNode.x, curNode.y,nodeWidth,nodeWidth);
+            }
+
+            ctx.font="6px";
+            ctx.fillStyle = "black";
+            ctx.textAlign = "center";
+            ctx.fillText(curNode.x+"-"+curNode.y, curNode.x+20, curNode.y+30);
+            ctx.fillText(encodeToIndex(curNode), curNode.x+20, curNode.y+20);
+          }
+        };
+      }
+
+      function encodeToIndex(node){
+        return (node.x/nodeWidth+node.y/nodeWidth*nodePerRow);
+      }
+
+      function decodeToNode(code){
+        var y = parseInt(code/nodePerRow, 10);
+        var x = (code%nodePerRow);
+        return lines[y][x];
+      }
+
+      function setAdjs(node,y,x){
+        var upNode, downNode, leftNode, rightNode;
+        if(y>=1){
+          upNode = lines[y-1][x];
+        }
+        if(y<nodePerColumn-1){
+          downNode = lines[y+1][x];
+        }
+        if(x>=1){
+          leftNode = lines[y][x-1];
+        }
+        if(x<nodePerRow-1){
+          rightNode = lines[y][x+1];
+        }
+
+        if(upNode != undefined){
+          if(node.isBlank || (!node.isBlank && upNode.isBlank)){
+            node.up = upNode;
+          }
+        }
+        if(downNode != undefined){
+          if(node.isBlank || (!node.isBlank && downNode.isBlank)){
+            node.down = downNode;
+          }
+        }
+        if(leftNode != undefined){
+          if(node.isBlank || (!node.isBlank && leftNode.isBlank)){
+            node.left = leftNode;
+          }
+        }
+        if(rightNode != undefined){
+          if(node.isBlank || (!node.isBlank && rightNode.isBlank)){
+            node.right = rightNode;
+          }
+        }
+      }
+
+      function getAdjs(node){
+        var adjs = new Array();
+        if(node.up){
+          adjs.push(node.up);
+        }
+        if(node.down){
+          adjs.push(node.down);
+        }
+        if(node.left){
+          adjs.push(node.left);
+        }
+        if(node.right){
+          adjs.push(node.right);
+        }
+        return adjs;
+      }
+
+      function bfs(queue,visit,pathTo){
+        if(found){
+          return;
+        }
+        if(queue.isEmpty()){
+          console.log("---- transver done ----");
+          return;
+        }else{
+          var top = queue.dequeue();
+          var topIndex = encodeToIndex(top)
+          visit[topIndex] = true;
+          var adjs = getAdjs(top);
+          for(var i=0;i<adjs.length;i++){
+            var next = adjs[i];
+            var nextIndex = encodeToIndex(next);
+            if(!pathTo[nextIndex]){
+              pathTo[nextIndex] = topIndex;
+            }
+            if(nextIndex == encodeToIndex(descNode)){
+              found = true;
+              return;
+            }
+            if(!visit[nextIndex] && next.isBlank){
+              queue.add(next);
+            }
+          }
+        }
+        bfs(queue,visit,pathTo);
+      }
+
+      function hasPathTo(){
+        found = false;
+        visit = new Array();
+        pathTo = new Array();
+        queue = new buckets.Queue();
+        queue.add(srcNode);
+        bfs(queue,visit,pathTo);
+      }
+
+      function isMatch(){
+        if((srcNode.color == descNode.color)){
+          console.log('do hasPathTo');
+          hasPathTo();
+          if(found){
+            drawQueue();
+          }
+          return found;
+        }else{
+          return false;
+        }
+      }
+
+      function q(event) {
+        event = event || window.event;
+        canvas = document.getElementById('grid'),
+            x = event.pageX - canvas.offsetLeft,
+            y = event.pageY - canvas.offsetTop;
+
+        var xIndex = parseInt(x/nodeWidth,10),
+            yIndex = parseInt(y/nodeWidth,10);
+        var clicked = lines[yIndex][xIndex];
+
+        if(!srcSet){
+          clicked.src = true;
+          srcSet = true;
+          srcNode = clicked;
+        }else if(srcSet && !descSet){
+          clicked.desc = true;
+          descSet = true;
+          descNode = clicked;
+        }
+
+        if(srcSet && descSet){
+          if(isMatch()){
+            srcNode.color = descNode.color = 'white';
+            srcNode.isBlank = descNode.isBlank = true;
+          }else{
+            console.log('banned');
+          }
+          srcNode.src = descNode.desc = srcSet = descSet = false;
+        }
+      }
+
+      function drawQueue(){
+        var stack = buckets.Stack();
+        stack.add(descNode);
+        var descCode = encodeToIndex(descNode);
+        while(pathTo[descCode]&&pathTo[descCode]!==encodeToIndex(srcNode)){
+          var srcCode = pathTo[descCode];
+          var node = decodeToNode(srcCode);
+          stack.add(node);
+          descCode = srcCode;
+        }
+        stack.add(srcNode);
+        while(!stack.isEmpty()){
+          var node = stack.pop();
+          node.color="grey";
+          ctx.lineWidth= 1;
+          ctx.fillStyle = "grey";
+          ctx.fillRect(node.x, node.y,nodeWidth,nodeWidth);
+        }
+      }
+
+      function main(){
+        initGrid();
+        var loop = function(){
+          drawGrid();
+          window.requestAnimationFrame(loop, canvas);
+        }
+        window.requestAnimationFrame(loop, canvas);
+      }
+
+      main();     
+    </script>
+  </body>
+</html>
