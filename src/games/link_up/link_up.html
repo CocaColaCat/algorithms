@@ -24,12 +24,12 @@
         background-color: beige;
       }
     </style>
-    <script src="buckets.min.js"></script>
+    <script src="bucket.js"></script>
   </head>
   <body>
     <div id="game-board">
       <canvas id="score" height="100px" width="600px"></canvas>
-      <canvas id='grid' height="440px" width="600px" style="" onclick="q()">
+      <canvas id='grid' height="520px" width="600px" style="" onclick="q()">
       </canvas>
     </div>
 
@@ -40,9 +40,13 @@
           scoreCanvas,
           ctxScore;
       var COLORS = ['red','yellow','blue','green','orange','pink'];
+      var COLORSHASH = {};
+      COLORS.forEach(function(color, index) {
+        COLORSHASH[color] = index;
+      });
       var nodeWidth = 40;
       var nodePerRow = 15;
-      var nodePerColumn = 11;
+      var nodePerColumn = 3;
       var srcSet = false;
       var descSet = false;
       var srcNode, descNode;
@@ -50,6 +54,7 @@
       var queue, visit, pathTo, crossCount, pointTo;
       var found = false;
       var score = 0;
+      var maxScoreWithoutDeadLockock = (nodePerRow*(parseInt(nodePerColumn/2, 10))-COLORS.length)/2;
 
       var Node = function (x,y,isBlank,left,right,up,down,color,src,desc) {
           this.x = x;
@@ -142,44 +147,71 @@
       }
 
       function drawGrid(){
+        canvas = document.getElementById('grid');
+        ctx = canvas.getContext('2d');
+  
+        var colorFredCount;
+        var shouldRearrange = true;
+
+        for(var i=0;i<nodePerColumn;i++){
+          for(var j=0;j<nodePerRow;j++){
+            var curNode = lines[i][j];
+            setAdjs(curNode,i,j);
+            drawNode(curNode);
+
+            if(shouldDetectDeadlock()){
+              if(shouldRearrange){
+                console.log('detect deadlock');
+                colorFredCount = Array.apply(null, Array(COLORS.length)).map(function(){return 0;})
+                var index = COLORSHASH[curNode.color];
+                colorFredCount[index] += 1;
+                if(colorFredCount[index]>=2){
+                  shouldRearrange = false;
+                }
+              }
+              if(shouldRearrange && i==(nodePerColumn-1) && j==(nodePerRow-1)){
+                console.log('do rearrange');
+              }
+            }
+          }
+        };
+      }
+
+      function drawScore(){
         scoreCanvas = document.getElementById('score');
         ctxScore = scoreCanvas.getContext('2d');
         ctxScore.clearRect(0, 0, scoreCanvas.width, scoreCanvas.height);
         ctxScore.font = "30px Arial";
         ctxScore.fillText("Your Score: "+score,10,50);
+      }
 
-        canvas = document.getElementById('grid');
-        ctx = canvas.getContext('2d');
-        for(var i=0;i<nodePerColumn;i++){
-          for(var j=0;j<nodePerRow;j++){
-            var curNode = lines[i][j];
+      function drawNode(curNode){
+        ctx.lineWidth=1;
+        ctx.fillStyle = curNode.color;
+        ctx.fillRect(curNode.x, curNode.y,nodeWidth,nodeWidth);
 
-            setAdjs(curNode,i,j);
+        if(curNode.src){
+          ctx.lineWidth=4;
+          ctx.strokeStyle = 'black';
+          ctx.strokeRect(curNode.x, curNode.y,nodeWidth-2,nodeWidth-2);
+        }else if(curNode.desc){
+          ctx.lineWidth=4;
+          ctx.strokeStyle = 'brown';
+          ctx.strokeRect(curNode.x, curNode.y,nodeWidth-2,nodeWidth-2);
+        }else{
+          ctx.strokeStyle = 'grey';
+          ctx.strokeRect(curNode.x, curNode.y,nodeWidth,nodeWidth);
+        }
 
-            ctx.lineWidth=1;
-            ctx.fillStyle = curNode.color;
-            ctx.fillRect(curNode.x, curNode.y,nodeWidth,nodeWidth);
+        ctx.font="6px";
+        ctx.fillStyle = "black";
+        ctx.textAlign = "center";
+        ctx.fillText(curNode.x+"-"+curNode.y, curNode.x+20, curNode.y+30);
+        ctx.fillText(encodeToIndex(curNode), curNode.x+20, curNode.y+20);
+      }
 
-            if(curNode.src){
-              ctx.lineWidth=4;
-              ctx.strokeStyle = 'black';
-              ctx.strokeRect(curNode.x, curNode.y,nodeWidth-2,nodeWidth-2);
-            }else if(curNode.desc){
-              ctx.lineWidth=4;
-              ctx.strokeStyle = 'brown';
-              ctx.strokeRect(curNode.x, curNode.y,nodeWidth-2,nodeWidth-2);
-            }else{
-              ctx.strokeStyle = 'grey';
-              ctx.strokeRect(curNode.x, curNode.y,nodeWidth,nodeWidth);
-            }
-
-            ctx.font="6px";
-            ctx.fillStyle = "black";
-            ctx.textAlign = "center";
-            ctx.fillText(curNode.x+"-"+curNode.y, curNode.x+20, curNode.y+30);
-            ctx.fillText(encodeToIndex(curNode), curNode.x+20, curNode.y+20);
-          }
-        };
+      function shouldDetectDeadlock(){
+        return (score>=maxScoreWithoutDeadLockock);
       }
 
       function encodeToIndex(node){
@@ -277,6 +309,7 @@
         if((srcNode.color == descNode.color)){
           hasPathTo();
           if(found){
+            console.log('drawQueue');
             drawQueue();
           }
           return found;
@@ -310,16 +343,17 @@
             srcNode.color = descNode.color = 'white';
             srcNode.isBlank = descNode.isBlank = true;
             score = score+1;
-            console.log("score is "+ score);
           }else{
             console.log('banned');
           }
           srcNode.src = descNode.desc = srcSet = descSet = false;
         }
+        drawScore();
+        drawGrid();
       }
 
       function drawQueue(){
-        var stack = buckets.Stack();
+        var stack = new buckets.Stack();
         stack.add(descNode);
         var descCode = encodeToIndex(descNode);
         while(pathTo[descCode]&&pathTo[descCode]!==encodeToIndex(srcNode)){
@@ -340,11 +374,8 @@
 
       function main(){
         initGrid();
-        var loop = function(){
-          drawGrid();
-          window.requestAnimationFrame(loop, canvas);
-        }
-        window.requestAnimationFrame(loop, canvas);
+        drawScore();
+        drawGrid();
       }
 
       main();
