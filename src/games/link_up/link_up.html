@@ -29,7 +29,7 @@
   <body>
     <div id="game-board">
       <canvas id="score" height="100px" width="600px"></canvas>
-      <canvas id='grid' height="520px" width="600px" style="" onclick="q()">
+      <canvas id='grid' height="520px" width="640px" style="" onclick="q()">
       </canvas>
     </div>
 
@@ -45,8 +45,8 @@
         COLORSHASH[color] = index;
       });
       var nodeWidth = 40;
-      var nodePerRow = 15;
-      var nodePerColumn = 3;
+      var nodePerRow = 10;
+      var nodePerColumn = 7;
       var srcSet = false;
       var descSet = false;
       var srcNode, descNode;
@@ -54,7 +54,9 @@
       var queue, visit, pathTo, crossCount, pointTo;
       var found = false;
       var score = 0;
-      var maxScoreWithoutDeadLockock = (nodePerRow*(parseInt(nodePerColumn/2, 10))-COLORS.length)/2;
+      var maxScore = nodePerRow*(parseInt(nodePerColumn/2, 10))/2;
+      var maxScoreWithoutDeadLockock = maxScore-COLORS.length/2;
+      var rearranged = false;
 
       var Node = function (x,y,isBlank,left,right,up,down,color,src,desc) {
           this.x = x;
@@ -149,8 +151,9 @@
       function drawGrid(){
         canvas = document.getElementById('grid');
         ctx = canvas.getContext('2d');
-  
-        var colorFredCount;
+
+        var colorFredCount = Array.apply(null, Array(COLORS.length)).map(function(){return 0;});
+        var leftNodes = new Array();
         var shouldRearrange = true;
 
         for(var i=0;i<nodePerColumn;i++){
@@ -159,18 +162,23 @@
             setAdjs(curNode,i,j);
             drawNode(curNode);
 
-            if(shouldDetectDeadlock()){
-              if(shouldRearrange){
-                console.log('detect deadlock');
-                colorFredCount = Array.apply(null, Array(COLORS.length)).map(function(){return 0;})
+            if(shouldDetectDeadlock() && !rearranged){
+              if(shouldRearrange && !curNode.isBlank){
                 var index = COLORSHASH[curNode.color];
-                colorFredCount[index] += 1;
+                colorFredCount[index] = colorFredCount[index]+1;
+                leftNodes.push(curNode);
                 if(colorFredCount[index]>=2){
                   shouldRearrange = false;
                 }
               }
               if(shouldRearrange && i==(nodePerColumn-1) && j==(nodePerRow-1)){
-                console.log('do rearrange');
+                for(var i=0; i<leftNodes.length; i++){
+                  if(i%2!=0){
+                    leftNodes[i].color = leftNodes[i-1].color;
+                  }
+                }
+                drawGrid();
+                rearranged = true;
               }
             }
           }
@@ -328,28 +336,34 @@
             yIndex = parseInt(y/nodeWidth,10);
         var clicked = lines[yIndex][xIndex];
 
-        if(!srcSet){
-          clicked.src = true;
-          srcSet = true;
-          srcNode = clicked;
-        }else if(srcSet && !descSet){
-          clicked.desc = true;
-          descSet = true;
-          descNode = clicked;
-        }
-
-        if(srcSet && descSet){
-          if(isMatch()){
-            srcNode.color = descNode.color = 'white';
-            srcNode.isBlank = descNode.isBlank = true;
-            score = score+1;
-          }else{
-            console.log('banned');
+        if(score<maxScore){
+          if(!srcSet){
+            clicked.src = true;
+            srcSet = true;
+            srcNode = clicked;
+          }else if(srcSet && !descSet){
+            clicked.desc = true;
+            descSet = true;
+            descNode = clicked;
           }
-          srcNode.src = descNode.desc = srcSet = descSet = false;
+          if(srcSet && descSet){
+            if(isMatch()){
+              srcNode.color = descNode.color = 'white';
+              srcNode.isBlank = descNode.isBlank = true;
+              score = score+1;
+              if(score==maxScore){
+                console.log('game over');
+              }
+            }else{
+              console.log('banned');
+            }
+            srcNode.src = descNode.desc = srcSet = descSet = false;
+          }
+          drawScore();
+          drawGrid();
+        }else{
+          console.log('game over');
         }
-        drawScore();
-        drawGrid();
       }
 
       function drawQueue(){
