@@ -29,7 +29,7 @@
   <body>
     <div id="game-board">
       <canvas id="score" height="100px" width="600px"></canvas>
-      <canvas id='grid' height="520px" width="640px" style="" onclick="q()">
+      <canvas id='grid' height="520px" width="600px" style="" onclick="q()">
       </canvas>
     </div>
 
@@ -47,10 +47,8 @@
       var nodeWidth = 40;
       var nodePerRow = 10;
       var nodePerColumn = 7;
-      var srcSet = false;
-      var descSet = false;
+      var srcSet = descSet = false;
       var srcNode, descNode;
-      var show = true;
       var queue, visit, pathTo, crossCount, pointTo;
       var found = false;
       var score = 0;
